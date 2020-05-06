@@ -1,3 +1,13 @@
+import pandas as pd
+import numpy as np
+import networkx as nx
+import numbers
+import warnings
+from logging_config import Logger
+
+log = Logger().setup_logger()
+
+
 class LinearGaussian():
   def __init__(self):
     """
@@ -11,12 +21,13 @@ class LinearGaussian():
     No need to call set_parameters if data is set using this function.
     """
     if not isinstance(dataframe, pd.DataFrame):
-      raise ValueError("Argument invalid. Please provide Pandas DataFrame")
+      raise TypeError("Argument invalid. Please provide Pandas DataFrame")
     if len(dataframe.columns) <=1:
       raise ValueError(f"Dataframe contains only {dataframe.columns}")
-    if sorted(list((dataframe.columns))) != sorted(list(self.g.nodes)):
-      raise ValueError("DataFrame does not contain all the nodes or it contains extra nodes")
+    if set(list((self.g.nodes))).issubset(list(dataframe.columns)):
+      raise ValueError("DataFrame does not contain all the nodes")
 
+    dataframe = dataframe[list(self.g.nodes)]
     self.data = dataframe.reindex(sorted(dataframe.columns), axis=1)
     self.nodes = list((self.data.columns))
     self.mean  = np.array(self.get_mean())
@@ -27,7 +38,6 @@ class LinearGaussian():
     """
     Set Mean and covariance manually wihout data.
     """
-
     self.mean = np.array(mean)
     self.cov = np.array(cov)
     self.nodes = list(self.g.nodes)
@@ -57,18 +67,28 @@ class LinearGaussian():
     """
     return self.data.mean()
 
-  def set_edges(self,edges):
+  def set_edge(self,u,v):
+    """
+    Set edge from u to v
+    """
+    if u == v:
+      raise ValueError("Self Loops not allowed.")
+    self.g.add_edge(u,v)
+
+  def set_edges_from(self,edges):
     """
     Set edges of network using list of edge tuples
     """
     for edge in edges:
+      if edge[0] == edge[1]:
+        raise ValueError("Self loops not allowed")
       self.g.add_edge(edge[0],edge[1])
 
-  def show_network(self):
+  def draw_network(self):
     """
     Plot network using matplolib library
     """
-    pass
+    nx.draw_networkx(self.g)
 
   def get_parents(self,node):
     """
@@ -76,14 +96,48 @@ class LinearGaussian():
     """
     return list(self.g.pred[node])
 
-
   def get_children(self,node):
     """
     Get children of node
     """
-    return list(self.g.succ[node])
+    return list(self.g.
 
-  
+      succ[node])
+
+  def network_summary():
+    """
+    Summary of each nodes in network.+
+    """
+    cols= ['Node','Mean','Std','Parents','Children']
+    summary = pd.DataFrame(cols)
+    for node in self.nodes:
+      row = [node,data[node].mean(),data[node].std(),self.get_parents(node),self.get_children(node)]
+      summary.iloc[len(summary)] = row
+    return summary
+
+  def get_network_info(self):
+    pass
+    log.info(f"Total Nodes: {len(self.nodes)}")
+
+  def plot_distributions(self):
+    """
+    KDE Plot of all the variables along with mean and standard deviation
+    """
+    rows=math.ceil(len(self.data.columns)/4)
+    fig, ax = plt.subplots(ncols=4,nrows=rows,figsize=(12, rows*2))
+    ix=0
+    fig.tight_layout()
+    for row in ax:
+        for col in row:
+            sns.distplot(self.data.iloc[:, ix].dropna(),norm_hist=False,ax=col,label="")
+            col.set_title(self.data.columns[ix]) 
+            col.set_xlabel('')
+            text(0.2, 0.8,f'u:{round(self.data.iloc[:, ix].mean(),2)}\nsd={round(self.data.iloc[:, ix].std(),2)}', ha='center', va='center', transform=col.transAxes)
+            ix+=1
+            if ix == len(self.data.columns):
+              break
+    plt.subplots_adjust(hspace = 0.4)
+
   def get_nodes(self):
     """
     Get list of nodes in network
@@ -107,6 +161,7 @@ class LinearGaussian():
     beta_0 = mu_j - np.dot(np.dot(sig_j_i, sig_i_i_inv),mu_i)
     beta = np.dot(sig_j_i,sig_i_i_inv)
     new_mu = beta_0 + np.dot(beta,values)
+    self.parameters[node]={'beta':list(beta_0)+list(beta[0])}
     return new_mu[0],covariance[0][0]
 
   def set_evidences(self,evidence_dict):
@@ -152,12 +207,15 @@ class LinearGaussian():
     """
     Get parameters for each node
     """
+    return self.parameters
     pass
 
   def run_inference(self,debug=False):
     """
     Run Inference on network with given evidences.
     """
+    log.setup_logger(debug=debug)
+    self.parameters=dict.fromkeys(self.nodes)
     if all(x==None for x in self.evidences.values()):
       warnings.warn("No evidence was set. Proceeding without evidence")
     leaf_nodes = [x for x in self.g.nodes() if self.g.out_degree(x)>=1 and self.g.in_degree(x)==0]
@@ -170,16 +228,17 @@ class LinearGaussian():
       next_leaf_nodes = leaf_nodes
       leaf_nodes = []
       for node in next_leaf_nodes:
-        print(f"calculating children of {node} : {list(self.g.succ[node].keys())}")
+        log.debug(f"calculating children of {node} : {list(self.g.succ[node].keys())}")
         if self.calculated_means[node] == None:
           self.calculated_means[node] = self.mean[self.nodes.index(node)]
-          print(f"Evidence wasn't available for node {node}, so took mean.")
+          log.debug(f"Evidence wasn't available for node {node}, so took mean.")
         for child in self.g.succ[node]:
           if self.done_flags[child] != True:
             self.calculated_means[child],self.calculated_vars[child] = self.get_node_values(child)
-            print(f"\tcalculated for {child}")
+            log.debug(f"\tcalculated for {child}")
             self.done_flags[child]=True
             leaf_nodes.append(child)
           else:
-            print(f"\t{child} already calculated")
+            log.debug(f"\t{child} already calculated")
     return self.calculated_means,self.calculated_vars
+
