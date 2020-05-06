@@ -104,7 +104,7 @@ class LinearGaussian():
 
       succ[node])
 
-  def network_summary():
+  def network_summary(): 
     """
     Summary of each nodes in network.+
     """
