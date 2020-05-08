@@ -92,15 +92,13 @@ class LinearGaussian():
 
     nx.drawing.nx_pydot.to_pydot(self.g).write_png(filename+'.png')      
     if open == True:
-
         import matplotlib.image as mpimg
         import matplotlib as mpl
         mpl.rcParams['figure.dpi']= 200
         plt.figure(figsize = (10,20))
         img=mpimg.imread(filename+'.png')
         imgplot = plt.imshow(img)
-        plt.show()      
-    #nx.draw_networkx(self.g)
+        plt.show()   
 
   def get_parents(self,node):
     """
@@ -112,9 +110,7 @@ class LinearGaussian():
     """
     Get children of node
     """
-    return list(self.g.
-
-      succ[node])
+    return list(self.g.succ[node])
 
   def get_network_object(self):
     return self.g
@@ -138,7 +134,7 @@ class LinearGaussian():
     pass
     log.info(f"Total Nodes: {len(self.nodes)}")
 
-  def plot_distributions(self):
+  def plot_distributions(self,save=False,filename=None):
     """
     KDE Plot of all the variables along with mean and standard deviation
     """
@@ -163,7 +159,10 @@ class LinearGaussian():
             if idx == len(self.data.columns)-1:
               break
     plt.subplots_adjust(hspace = 0.4)   
+    if save == True:
+        plt.savefig(filename+'.png')
     plt.show()
+
 
   
   def get_nodes(self):
