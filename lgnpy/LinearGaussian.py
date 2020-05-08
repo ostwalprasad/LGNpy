@@ -1,12 +1,10 @@
 import pandas as pd
 import numpy as np
 import networkx as nx
-import matplotlib.pyplot as plt
-import seaborn as sns
 import numbers
 import math
 import warnings
-from logging_config import Logger
+from .logging_config import Logger
 
 log = Logger()
 
@@ -90,15 +88,18 @@ class LinearGaussian():
     Plot network using matplolib library
     """
 
+
+
     nx.drawing.nx_pydot.to_pydot(self.g).write_png(filename+'.png')      
     if open == True:
+        import matplotlib.pyplot as plt
         import matplotlib.image as mpimg
         import matplotlib as mpl
         mpl.rcParams['figure.dpi']= 200
         plt.figure(figsize = (10,20))
         img=mpimg.imread(filename+'.png')
         imgplot = plt.imshow(img)
-        plt.show()   
+        plt.show()
 
   def get_parents(self,node):
     """
@@ -138,6 +139,10 @@ class LinearGaussian():
     """
     KDE Plot of all the variables along with mean and standard deviation
     """
+
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+
     rows=math.ceil(len(self.data.columns)/4)
     fig, ax = plt.subplots(ncols=4,
                            nrows=rows,
