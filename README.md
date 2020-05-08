@@ -1,6 +1,7 @@
-![Build Status](https://travis-ci.org/ostwalprasad/lgnpy.svg?branch=master)](https://travis-ci.org/ostwalprasad/lgnpy) ![PyPI - License](https://img.shields.io/pypi/l/lgnpy) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lgnpy)
+![Build Status](https://travis-ci.org/ostwalprasad/lgnpy.svg?branch=master)(https://travis-ci.org/ostwalprasad/lgnpy) ![PyPI - License](https://img.shields.io/pypi/l/lgnpy) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lgnpy)
 
 ## Linear Gaussian Networks
+![PyPI - License](https://img.shields.io/pypi/l/lgnpy)
 
 Features-
 1. Network Representation
