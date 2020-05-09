@@ -3,7 +3,9 @@ language: python
 python:
 
   - "3.7"
-
+  - "3.8"
+  - "3.6"
+install:
+    - pip install nose
 script: 
-
-  - python hello.py
+  - nosetests tests\test_lgnpy.py

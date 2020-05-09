@@ -168,8 +168,6 @@ class LinearGaussian():
         plt.savefig(filename+'.png')
     plt.show()
 
-
-  
   def get_nodes(self):
     """
     Get list of nodes in network
