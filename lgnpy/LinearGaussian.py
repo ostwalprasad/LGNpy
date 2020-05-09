@@ -178,7 +178,7 @@ class LinearGaussian():
 
     return list(self.g.edges)
 
-  def get_node_values(self,node):
+  def _get_node_values(self,node):
     """
     Get mean and variance of node using Linear Gaussian CPD. Calcluated using finding betas
     """
@@ -275,7 +275,7 @@ class LinearGaussian():
           _log.debug(f"Evidence wasn't available for node {node}, so took mean.")
         for child in self.g.succ[node]:
           if self.done_flags[child] != True:
-            self.calculated_means[child],self.calculated_vars[child] = self.get_node_values(child)
+            self.calculated_means[child],self.calculated_vars[child] = self._get_node_values(child)
             _log.debug(f"\tcalculated for {child}")
             self.done_flags[child]=True
             leaf_nodes.append(child)
