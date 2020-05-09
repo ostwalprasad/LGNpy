@@ -91,14 +91,14 @@ lg.plot_distributions(save=False)
 lg.network_summary()
 ```
 
-<br/><img src="docs/images/summary.png" align ="left" width="300" > <br/>
+<br/><img src="docs/images/summary.png"  width="300" > <br/>
 
 
 ```python
 lg.draw_network(filename='sample_network',open=True)
 ```
 
-<br/><img src="docs/images/drawn_network.png" align ="left" width="200"> <br/>
+<br/><img src="docs/images/drawn_network.png"  width="200"> <br/>
 
 
 ## References:
@@ -106,8 +106,6 @@ lg.draw_network(filename='sample_network',open=True)
 [Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 7.2
 
 [Gaussian Bayesian Networks](https://cedar.buffalo.edu/~srihari/CSE674/Chap7/7.2-GaussBNs.pdf), Sargur Srihari
-
-
 
 ## License
 
