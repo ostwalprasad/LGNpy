@@ -3,11 +3,12 @@ language: python
 python:
 
   - "3.7"
-  - "3.8"
-  - "3.6"
+
 install:
-    - pip install nose
-    - pip install -r requirements.txt
-script: 
+  - pip install nose
+  - pip install -r requirements.txt
+  
+before_script: 
   - cd tests
+script: 
   - nosetests test_lgnpy.py
