@@ -30,7 +30,7 @@ $ pip install https://github.com/ostwalprasad/lgnpy
 
 _____
 
-![Alt text](docs/images/sample_network.jpg?raw=true)
+![Alt text](docs/images/sample_network.png?raw=true)
 
 
 
