@@ -63,7 +63,7 @@ lg.set_data(data)
 
 For each node, CPT (Conditional Probability Distribution) is defined as::<br/>
 
-<img src="docs/images/cpd.png" width="210" ><br/>
+<img src="docs/images/cpd.png" width="210" ><b	r/>
 
 where, its parameters  are calculated using conditional distribution of parent(s) and nodes: <br/>
 
@@ -98,6 +98,9 @@ lg.draw_network(filename='sample_network',open=True)
 
 <br/><img src="docs/images/drawn_network.png"  width="200"> <br/>
 
+## Example
+
+Example Notebook [here](https://github.com/ostwalprasad/LGNpy/blob/master/examples/lgnpy_example.ipynb)
 
 ## References:
 
