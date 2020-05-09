@@ -26,9 +26,9 @@ $ pip install https://github.com/ostwalprasad/lgnpy
 
 
 
-______________
+### References:
 
-**References:**
+___
 
 [Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 7.2
 
@@ -80,29 +80,20 @@ lg.set_data(data)
 
 ####	4. Run Inference 
 
-For each node, CPT (Conditional Probability Distribution) is defined as::
+For each node, CPT (Conditional Probability Distribution) is defined as::<br/>
 
-<img src="docs/images/cpd.png" align="left" width="210" >
+<img src="docs/images/cpd.png" align="left" width="210" ><br/>
 
-where, it's parameters  are calculated using conditional distribution of parent(s) and nodes: 
+where, it's parameters  are calculated using conditional distribution of parent(s) and nodes: <br/>
 
-<img src="docs/images/betas.png" align="left" width="180" >
+<img src="docs/images/betas.png" align="left" width="180" > <br/><br/>
 
-`run_inference()` returns means and variances of each nodes.
+`run_inference()` returns means and variances of each nodes.<br/>
+
+
 
    ```
-   lg.run_inference(debug=False)
-   
-   ({'A': 5,
-  'B': 10,
-  'C': -4.786319758605391,
-  'D': 40.17729734929936,
-  'E': 106.06876013138348},
- {'A': None,
-  'B': None,
-  'C': None,
-  'D': 4.530868459203312,
-  'E': 4.291922724095514})
+lg.run_inference(debug=False)
    ```
 
    
