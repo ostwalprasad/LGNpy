@@ -5,15 +5,10 @@
 ## Representation, Learning and Inference for Linear Gaussian Networks
 
 Features-
-1. Network Representation
-2. Parameter Learning through Pandas dataframe
-3. Network related EDA
-4. Inference with Evidence
+1. Network Representation using NetworkX
+2. 
 
-### Installation
-
-_______
-
+## Installation
 ```bash
 $ pip install lgnpy
 ```
@@ -26,19 +21,7 @@ $ pip install https://github.com/ostwalprasad/lgnpy
 
 
 
-### References:
-
-___
-
-[Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 7.2
-
-[Gaussian Bayesian Networks](https://cedar.buffalo.edu/~srihari/CSE674/Chap7/7.2-GaussBNs.pdf), Sargur Srihari
-
-
-
-### Getting Started
-
-________
+## Getting Started
 
 #### 	1. Create Network
 
@@ -74,7 +57,7 @@ lg.set_data(data)
 
  Evidence are optional and can be set before running inference.
 
-```
+```python
  lg.set_evidences({'A':5,'B':10})
 ```
 
@@ -82,21 +65,23 @@ lg.set_data(data)
 
 For each node, CPT (Conditional Probability Distribution) is defined as::<br/>
 
-<img src="docs/images/cpd.png" align="left" width="210" ><br/>
+<img src="docs/images/cpd.png" width="210" ><br/>
 
 where, it's parameters  are calculated using conditional distribution of parent(s) and nodes: <br/>
 
-<img src="docs/images/betas.png" align="left" width="180" > <br/><br/>
+<img src="docs/images/betas.png"  width="180" > <br/>
 
-`run_inference()` returns means and variances of each nodes.<br/>
+<br/>`run_inference()` returns inferred means and variances of each nodes.<br/>
 
-
-
-   ```
+   ```python
 lg.run_inference(debug=False)
    ```
 
    
 
+## References:
 
+[Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 7.2
+
+[Gaussian Bayesian Networks](https://cedar.buffalo.edu/~srihari/CSE674/Chap7/7.2-GaussBNs.pdf), Sargur Srihari
 
