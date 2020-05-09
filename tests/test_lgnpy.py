@@ -4,7 +4,7 @@ from nose import with_setup
 from nose.tools import assert_almost_equal
 
 
-from lgnpy.LinearGaussian import LinearGaussian
+from lgnpy import LinearGaussian
 
 def setup():
     """
