@@ -71,7 +71,7 @@ where, it's parameters  are calculated using conditional distribution of parent(
 
 <img src="docs/images/betas.png"  width="180" > <br/>
 
-<br/>`run_inference()` returns inferred means and variances of each nodes.<br/>
+`run_inference()` returns inferred means and variances of each nodes.
 
    ```python
 lg.run_inference(debug=False)
@@ -79,9 +79,35 @@ lg.run_inference(debug=False)
 
    
 
+## Additional Functions:
+
+```python
+lg.plot_distributions(save=False)
+```
+
+<img src="docs/images/distributions.png" width="800" > <br/>
+
+```python
+lg.network_summary()
+```
+
+<img src="docs/images/summary.png" align ="left" width="300" >
+
+```python
+lg.draw_network(filename='sample_network',open=True)
+```
+
+<img src="docs/images/drawn_network.png" align ="left" width="200" >
+
 ## References:
 
 [Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 7.2
 
 [Gaussian Bayesian Networks](https://cedar.buffalo.edu/~srihari/CSE674/Chap7/7.2-GaussBNs.pdf), Sargur Srihari
+
+
+
+## License
+
+MIT License Copyright (c) 2020, Prasad Ostwal
 

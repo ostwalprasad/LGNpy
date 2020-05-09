@@ -143,8 +143,8 @@ class LinearGaussian():
     import seaborn as sns
     import matplotlib.pyplot as plt
 
-    rows=math.ceil(len(self.data.columns)/4)
-    fig, ax = plt.subplots(ncols=4,
+    rows=math.ceil(len(self.data.columns)/5)
+    fig, ax = plt.subplots(ncols=5,
                            nrows=rows,
                            figsize=(12, rows*2))
     fig.tight_layout()
@@ -247,7 +247,7 @@ class LinearGaussian():
     Get parameters for each node
     """
     return self.parameters
-    pass
+
 
   def run_inference(self,debug=True):
     """
