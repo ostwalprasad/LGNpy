@@ -7,7 +7,7 @@ python:
   - "3.6"
 install:
     - pip install nose
-    - pip intall lgnpy  
+    - pip install -r requirements.txt
 script: 
   - cd tests
   - nosetests test_lgnpy.py
