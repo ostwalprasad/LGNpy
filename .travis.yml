@@ -14,7 +14,7 @@ install:
 before_script: 
   - cd tests
 script: 
-  - coverage test_lgnpy.py
+  - coverage run test_lgnpy.py
   
 after_success:
   - codecov 
