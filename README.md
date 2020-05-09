@@ -28,11 +28,29 @@ $ pip install https://github.com/ostwalprasad/lgnpy
 
 ### Linear Gaussian Networks
 
-_____
+______________
 
-![Alt text](docs/images/sample_network.png?raw=true)
+**Example:**
+
+ All the variables are Gaussian and all CPDs are Linear Gaussian. 
+
+<a href="url"><img src="docs/images/sample_network.png" width="600" ></a>
 
 
+
+**Model Parameters:**
+
+The conditional density P(Y|X) is given by
+
+<img src="docs/images/cpd.png" align="left" width="220" >
+
+where,
+
+<img src="docs/images/betas.png" align="left" width="200" >
+
+
+
+$`\sqrt{2}`$
 
 ### Getting Started
 
