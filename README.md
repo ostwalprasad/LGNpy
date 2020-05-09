@@ -65,7 +65,7 @@ For each node, CPT (Conditional Probability Distribution) is defined as::<br/>
 
 <img src="docs/images/cpd.png" width="210" ><br/>
 
-where, it's parameters  are calculated using conditional distribution of parent(s) and nodes: <br/>
+where, its parameters  are calculated using conditional distribution of parent(s) and nodes: <br/>
 
 <img src="docs/images/betas.png"  width="180" > <br/>
 
