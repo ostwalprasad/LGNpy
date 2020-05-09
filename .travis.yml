@@ -8,4 +8,5 @@ python:
 install:
     - pip install nose
 script: 
-  - nosetests tests\test_lgnpy.py
+  - cd tests
+  - nosetests test_lgnpy.py
