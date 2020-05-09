@@ -7,8 +7,7 @@ python:
   - "3.6"
 install:
     - pip install nose
-    - pip install pandas
-    - pip install numpy
+    - pip intall lgnpy  
 script: 
   - cd tests
   - nosetests test_lgnpy.py
