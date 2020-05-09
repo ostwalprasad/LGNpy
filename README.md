@@ -34,7 +34,7 @@ ______________
 
  All the variables are Gaussian and all CPDs are Linear Gaussian. 
 
-<a href="url"><img src="docs/images/sample_network.png" width="600" ></a>
+<a href="url"><img src="docs/images/sample_network.png" width="500" ></a>
 
 
 
@@ -42,17 +42,23 @@ ______________
 
 The conditional density P(Y|X) is given by
 
-<img src="docs/images/cpd.png" align="left" width="220" >
+<img src="docs/images/cpd.png" align="left" width="200" >
+
+
 
 where,
 
-<img src="docs/images/betas.png" align="left" width="200" >
 
 
+<img src="docs/images/betas.png" align="left" width="180" >
 
+jkkljkl
+$$
+x
+$$
 
 $$
-`\sqrt{2}`
+\sqrt{2}
 $$
   h<sub>&theta;</sub>(x) = &theta;<sub>o</sub> x + &theta;<sub>1</sub>x
 
