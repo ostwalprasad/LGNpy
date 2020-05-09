@@ -91,13 +91,15 @@ lg.plot_distributions(save=False)
 lg.network_summary()
 ```
 
-<img src="docs/images/summary.png" align ="left" width="300" >
+<br/><img src="docs/images/summary.png" align ="left" width="300" > <br/>
+
 
 ```python
 lg.draw_network(filename='sample_network',open=True)
 ```
 
-<img src="docs/images/drawn_network.png" align ="left" width="200" >
+<br/><img src="docs/images/drawn_network.png" align ="left" width="200"> <br/>
+
 
 ## References:
 
