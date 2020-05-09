@@ -14,7 +14,7 @@ install:
 before_script: 
   - cd tests
 script: 
-  - nosetests test_lgnpy.py
+  - nosetests --with-coverage test_lgnpy.py
   
 after_success:
   - codecov 
