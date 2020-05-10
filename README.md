@@ -63,7 +63,7 @@ lg.set_data(data)
 
 For each node, CPT (Conditional Probability Distribution) is defined as::<br/>
 
-<img src="docs/images/cpd.png" width="210" ><b	r/>
+<img src="docs/images/cpd.png" width="210" ><br/>
 
 where, its parameters  are calculated using conditional distribution of parent(s) and nodes: <br/>
 
