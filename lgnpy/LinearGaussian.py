@@ -142,28 +142,33 @@ class LinearGaussian():
 
     import seaborn as sns
     import matplotlib.pyplot as plt
-
-    rows=math.ceil(len(self.data.columns)/5)
-    fig, ax = plt.subplots(ncols=5,
+    columns=5
+    sns.set(font_scale=1.0)
+    rows=math.ceil(len(self.data.columns)/columns)
+    fig, ax = plt.subplots(ncols=columns,
                            nrows=rows,
                            figsize=(12, rows*2))
+
     fig.tight_layout()
     for idx,axis in enumerate(ax.flatten()):
             sns.distplot(self.data.iloc[:, idx].dropna(),
                         norm_hist=False,
                         ax=axis,
                         label="")
-            axis.set_title(self.data.columns[idx]) 
+
+            axis.set_title(self.data.columns[idx])
             axis.set_xlabel('')
-            plt.text(0.2, 
+
+            axis.yaxis.set_major_formatter(plt.NullFormatter())
+            plt.text(0.2,
                     0.8,
-                    f'u:{round(self.data.iloc[:, idx].mean(),2)}\nsd={round(self.data.iloc[:, idx].std(),2)}', 
-                    ha='center', 
-                    va='center', 
+                    f'u:{round(self.data.iloc[:, idx].mean(),2)}\nsd={round(self.data.iloc[:, idx].std(),2)}',
+                    ha='center',
+                    va='center',
                     transform=axis.transAxes)
             if idx == len(self.data.columns)-1:
               break
-    plt.subplots_adjust(hspace = 0.4)   
+    plt.subplots_adjust(hspace = 0.4,wspace=0.1)
     if save == True:
         plt.savefig(filename+'.png')
     plt.show()
@@ -249,10 +254,15 @@ class LinearGaussian():
     return self.parameters
 
 
-  def run_inference(self,debug=True):
+  def run_inference(self,debug=True,return_results=True):
     """
     Run Inference on network with given evidences.
     """
+    self.inf_summary = pd.DataFrame(index=self.nodes,columns=['ev','u','u_inf','s','s_inf'])
+    self.inf_summary.loc[:,'u'] = self.mean
+    self.inf_summary['ev'] = self.inf_summary.index.to_series().map(self.evidences)
+    self.inf_summary.loc[:,'s'] = np.diag(self.cov)
+
     _log= log.setup_logger(debug=debug)
     print(_log)
     _log.debug("Started")
@@ -281,5 +291,14 @@ class LinearGaussian():
             leaf_nodes.append(child)
           else:
             _log.debug(f"\t{child} already calculated")
-    return self.calculated_means,self.calculated_vars
 
+
+    self.inf_summary['u_inf'] = self.inf_summary.index.to_series().map(self.calculated_means)
+    self.inf_summary['s_inf'] = self.inf_summary.index.to_series().map(self.calculated_vars)
+    self.inf_summary['u_%change'] = ((self.inf_summary['u_inf']-self.inf_summary['u'])/self.inf_summary['u'])*100
+    self.inf_summary = self.inf_summary.round(3).replace(pd.np.nan, '', regex=True).replace(0,'',regex=True)
+    return self.inf_summary
+
+
+  def get_inference_results(self):
+    return self.inf_summary
