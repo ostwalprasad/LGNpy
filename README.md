@@ -82,20 +82,16 @@ lg.run_inference(debug=False)
 ```python
 lg.plot_distributions(save=False)
 ```
-
 <img src="docs/images/distributions.png" width="800" > <br/>
 
 ```python
 lg.network_summary()
 ```
-
 <br/><img src="docs/images/summary.png"  width="300" > <br/>
-
 
 ```python
 lg.draw_network(filename='sample_network',open=True)
 ```
-
 <br/><img src="docs/images/drawn_network.png"  width="200"> <br/>
 
 ## Example
