@@ -20,6 +20,7 @@ Gaussian Belief Propogation (Message Passing algorithm) for Gaussian Graphical M
     """
     j = np.diag(np.diag(self.precision_matrix))
     h = np.diag(self.mean_vector)
+    p = self.precision_matrix
     self.iterations = iterations
     for n in range(self.iterations):
       for a in range(len(j)):
