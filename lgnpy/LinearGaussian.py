@@ -292,11 +292,10 @@ class LinearGaussian():
           else:
             _log.debug(f"\t{child} already calculated")
 
-
     self.inf_summary['u_inf'] = self.inf_summary.index.to_series().map(self.calculated_means)
     self.inf_summary['s_inf'] = self.inf_summary.index.to_series().map(self.calculated_vars)
     self.inf_summary['u_%change'] = ((self.inf_summary['u_inf']-self.inf_summary['u'])/self.inf_summary['u'])*100
-    self.inf_summary = self.inf_summary.round(3).replace(pd.np.nan, '', regex=True).replace(0,'',regex=True)
+    self.inf_summary = self.inf_summary.round(4).replace(pd.np.nan, '', regex=True).replace(0,'',regex=True)
     return self.inf_summary
 
 
