@@ -27,7 +27,7 @@ $ pip install https://github.com/ostwalprasad/lgnpy
 
 ```python
 import pandas as pd
-imoprt numpy as np
+import numpy as np
 from lgnpy import LinearGaussian
 
 lg = LinearGaussian()
@@ -46,7 +46,7 @@ data['A'] = np.random.normal(5,2,n)
 data['B'] = np.random.normal(10,2,n)
 data['D'] = 2*data['A'] + 3*data['B'] + np.random.normal(0,2,n)
 data['C'] = np.random.normal(-5,2,n)
-data['E'] = 3*data['C'] + 3*data['D'] + np.rando	m.normal(0,2,n)
+data['E'] = 3*data['C'] + 3*data['D'] + np.random.normal(0,2,n)
 
 lg.set_data(data)
 ```

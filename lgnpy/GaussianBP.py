@@ -1,20 +1,25 @@
-class GaussianBP():
-"""
-Gaussian Belief Propogation (Message Passing algorithm) for Gaussian Graphical Models
-"""
+import pandas as pd
+import numpy as np
+import networkx as nx
+import numbers
+import math
+from .Graph import Graph
+import warnings
+from .logging_config import Logger
+
+log = Logger()
+
+
+class GaussianBP(Graph):
+  """
+  Gaussian Belief Propogation (Message Passing algorithm) for Gaussian Graphical Models
+  """
 
   def __init__(self):
+    super().__init__()
     pass
 
-  def set_parameters(self,precision_matrix,mean_vector,nodes):
-    """
-    Set precision matrix(j), mean vector(h) and node names
-    """
-    self.precision_matrix = precision_matrix
-    self.mean_vector = mean_vector
-    self.nodes = nodes
-
-  def fit(self,iterations):
+  def __fit(self,iterations):
     """
     Run Message passing algorithm
     """
@@ -31,7 +36,7 @@ Gaussian Belief Propogation (Message Passing algorithm) for Gaussian Graphical M
     self.j=j
     self.h=h
 
-  def infer_marginals(self):
+  def __infer_marginals(self):
     """
     Infer marginal variance and mean for each node
     """
@@ -44,8 +49,14 @@ Gaussian Belief Propogation (Message Passing algorithm) for Gaussian Graphical M
     self.infh = np.array(self.infh)
     return 1/self.infj,(1/self.infj)*self.infh
 
-  def get_precision(self,cov):
+
+  def __build_precisions(self):
     """
-    Get precision matrix from covariance matrix
+
     """
-    return np.linalg.inv(cov)
+    self.modprecision = np.zeros()
+
+
+  def run_inference(self,debug=False):
+    pass
+
