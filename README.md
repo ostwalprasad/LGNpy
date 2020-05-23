@@ -1,6 +1,8 @@
 
 <img src="https://github.com/ostwalprasad/LGNpy/raw/master/docs/images/logo.png" width="250" > 
-<hr /> 
+
+## Gaussian Bayesian Networks -Representation, Learning and Inference
+<hr />
 
 [![Build Status](https://travis-ci.org/ostwalprasad/LGNpy.svg?branch=master)](https://travis-ci.org/ostwalprasad/LGNpy)
 ![PyPI - License](https://img.shields.io/pypi/l/lgnpy)
@@ -9,8 +11,6 @@
 [![codecov](https://codecov.io/gh/ostwalprasad/LGNpy/branch/master/graph/badge.svg)](https://codecov.io/gh/ostwalprasad/LGNpy) 
 [![Downloads](https://pepy.tech/badge/lgnpy)](https://pepy.tech/project/lgnpy)
 
-
-## Gaussian Bayesian Networks -Representation, Learning and Inference
 
 LGNs are Bayesian Networks where all the nodes have continuous data. Gaussians are surprisingly good approximation for many real world continuous distributions. This package helps in modelling the network, learning parameters through data and running inference with evidence(s)
 
