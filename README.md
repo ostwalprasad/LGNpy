@@ -1,5 +1,6 @@
 
 <img src="https://github.com/ostwalprasad/LGNpy/raw/master/docs/images/logo.png" width="250" > 
+<hr /> 
 
 [![Build Status](https://travis-ci.org/ostwalprasad/LGNpy.svg?branch=master)](https://travis-ci.org/ostwalprasad/LGNpy)
 ![PyPI - License](https://img.shields.io/pypi/l/lgnpy)
@@ -7,7 +8,7 @@
 [![Documentation Status](https://readthedocs.org/projects/lgnpy/badge/?version=latest)](https://lgnpy.readthedocs.io/en/latest/?badge=latest) 
 [![codecov](https://codecov.io/gh/ostwalprasad/LGNpy/branch/master/graph/badge.svg)](https://codecov.io/gh/ostwalprasad/LGNpy) 
 [![Downloads](https://pepy.tech/badge/lgnpy)](https://pepy.tech/project/lgnpy)
-<hr /> 
+
 
 ## Gaussian Bayesian Networks -Representation, Learning and Inference
 
