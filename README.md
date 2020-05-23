@@ -1,4 +1,5 @@
-# LGNpy
+
+<img src="https://github.com/ostwalprasad/LGNpy/raw/master/docs/images/logo.png" width="250" > <br/>
 
 [![Build Status](https://travis-ci.org/ostwalprasad/LGNpy.svg?branch=master)](https://travis-ci.org/ostwalprasad/LGNpy)
 ![PyPI - License](https://img.shields.io/pypi/l/lgnpy)
@@ -12,7 +13,7 @@
 LGNs are Bayesian Networks where all the nodes have continuous data. Gaussians are surprisingly good approximation for many real world continuous distributions. This package helps in modelling the network, learning parameters through data and running inference with evidence(s)
 
 #### Models Implemented:
-1. Linear Gaussian Networks
+1. Linear Gaussian Network
 2. Gaussian Belief Propagation (Also called as _Message Passing Algorithm_ or _GaBP Algorithm_)
 
 ## Installation
@@ -112,11 +113,13 @@ Notebook: [Gaussian Belief Propagation]()
 ## References:
 
 ##### Linear Gaussian Networks
-1.[Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 7.2
 
-2.[Gaussian Bayesian Networks](https://cedar.buffalo.edu/~srihari/CSE674/Chap7/7.2-GaussBNs.pdf), Sargur Srihari
+1. [Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 7.2
+
+2. [Gaussian Bayesian Networks](https://cedar.buffalo.edu/~srihari/CSE674/Chap7/7.2-GaussBNs.pdf), Sargur Srihari
 
 #####  Gaussian Belief Propogation 
+
 1. [Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 14.2.3
 2. [Gaussian Belief Propagation: Theory and Aplication](https://arxiv.org/abs/0811.2518), Danny Bickson
 ## License
