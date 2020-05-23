@@ -1,6 +1,11 @@
 # LGNpy
 
-![Build Status](https://travis-ci.org/ostwalprasad/lgnpy.svg?branch=master) ![PyPI - License](https://img.shields.io/pypi/l/lgnpy) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lgnpy) [![Documentation Status](https://readthedocs.org/projects/lgnpy/badge/?version=latest)](https://lgnpy.readthedocs.io/en/latest/?badge=latest) [![codecov](https://codecov.io/gh/ostwalprasad/LGNpy/branch/master/graph/badge.svg)](https://codecov.io/gh/ostwalprasad/LGNpy) [![Downloads](https://pepy.tech/badge/lgnpy)](https://pepy.tech/project/lgnpy)
+[![Build Status](https://travis-ci.org/ostwalprasad/LGNpy.svg?branch=master)](https://travis-ci.org/ostwalprasad/LGNpy)
+![PyPI - License](https://img.shields.io/pypi/l/lgnpy)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lgnpy)
+[![Documentation Status](https://readthedocs.org/projects/lgnpy/badge/?version=latest)](https://lgnpy.readthedocs.io/en/latest/?badge=latest) 
+[![codecov](https://codecov.io/gh/ostwalprasad/LGNpy/branch/master/graph/badge.svg)](https://codecov.io/gh/ostwalprasad/LGNpy) 
+[![Downloads](https://pepy.tech/badge/lgnpy)](https://pepy.tech/project/lgnpy)
 
 ## Representation, Learning and Inference for Linear Gaussian Bayesian Networks
 
