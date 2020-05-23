@@ -7,9 +7,13 @@
 [![codecov](https://codecov.io/gh/ostwalprasad/LGNpy/branch/master/graph/badge.svg)](https://codecov.io/gh/ostwalprasad/LGNpy) 
 [![Downloads](https://pepy.tech/badge/lgnpy)](https://pepy.tech/project/lgnpy)
 
-## Representation, Learning and Inference for Linear Gaussian Bayesian Networks
+## Gaussian Bayesian Networks -Representation, Learning and Inference
 
 LGNs are Bayesian Networks where all the nodes have continuous data. Gaussians are surprisingly good approximation for many real world continuous distributions. This package helps in modelling the network, learning parameters through data and running inference with evidence(s)
+
+#### Models Implemented:
+1. Linear Gaussian Networks
+2. Gaussian Belief Propagation (Also called as _Message Passing Algorithm_ or _GaBP Algorithm_)
 
 ## Installation
 ```bash
@@ -26,10 +30,11 @@ $ pip install https://github.com/ostwalprasad/lgnpy
 
 ## Getting Started
 
+Here are steps for Linear Gaussian Model. Gaussian Belief Propagation Model is also similar. 
 #### 	1. Create Network
 
-<img src="docs/images/network.png" width="200" >
-
+<img src="https://raw.githubusercontent.com/ostwalprasad/LGNpy/master/docs/images/network.png" width="200" >
+    
 ```python
 import pandas as pd
 import numpy as np
@@ -68,11 +73,11 @@ lg.set_data(data)
 
 For each node, CPT (Conditional Probability Distribution) is defined as::<br/>
 
-<img src="docs/images/cpd.png" width="210" ><br/>
+<img src="https://raw.githubusercontent.com/ostwalprasad/LGNpy/master/docs/images/cpd.png" width="210" ><br/>
 
 where, its parameters  are calculated using conditional distribution of parent(s) and nodes: <br/>
 
-<img src="docs/images/betas.png"  width="180" > <br/>
+<img src="https://raw.githubusercontent.com/ostwalprasad/LGNpy/master/docs/images/betas.png"  width="180" > <br/>
 
 `run_inference()` returns inferred means and variances of each nodes.
 
@@ -87,28 +92,33 @@ lg.run_inference(debug=False)
 ```python
 lg.plot_distributions(save=False)
 ```
-<img src="docs/images/distributions.png" width="800" > <br/>
+<img src="https://github.com/ostwalprasad/LGNpy/raw/master/docs/images/distributions.png" width="800" > <br/>
 
 ```python
 lg.network_summary()
 ```
-<br/><img src="docs/images/summary.png"  width="300" > <br/>
-
+<br/><img src="https://raw.githubusercontent.com/ostwalprasad/LGNpy/master/docs/images/summary.png"  width="300" > <br/>
 ```python
 lg.draw_network(filename='sample_network',open=True)
 ```
-<br/><img src="docs/images/drawn_network.png"  width="200"> <br/>
+<br/><img src="https://raw.githubusercontent.com/ostwalprasad/LGNpy/master/docs/images/drawn_network.png"  width="200"> <br/>
 
-## Example
+## Examples
 
-Example Notebook [here](https://github.com/ostwalprasad/LGNpy/blob/master/examples/lgnpy_example.ipynb)
+Notebook: [Linear Gaussian Networks](https://github.com/ostwalprasad/LGNpy/blob/master/examples/lgnpy_example.ipynb)
+
+Notebook: [Gaussian Belief Propagation]() 
 
 ## References:
 
-[Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 7.2
+##### Linear Gaussian Networks
+1.[Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 7.2
 
-[Gaussian Bayesian Networks](https://cedar.buffalo.edu/~srihari/CSE674/Chap7/7.2-GaussBNs.pdf), Sargur Srihari
+2.[Gaussian Bayesian Networks](https://cedar.buffalo.edu/~srihari/CSE674/Chap7/7.2-GaussBNs.pdf), Sargur Srihari
 
+#####  Gaussian Belief Propogation 
+1. [Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 14.2.3
+2. [Gaussian Belief Propagation: Theory and Aplication](https://arxiv.org/abs/0811.2518), Danny Bickson
 ## License
 
 MIT License Copyright (c) 2020, Prasad Ostwal
