@@ -2,7 +2,7 @@
 <img src="https://github.com/ostwalprasad/LGNpy/raw/master/docs/images/logo.png" width="250" > 
 
 ## Gaussian Bayesian Networks -Representation, Learning and Inference
-<hr />
+
 
 [![Build Status](https://travis-ci.org/ostwalprasad/LGNpy.svg?branch=master)](https://travis-ci.org/ostwalprasad/LGNpy)
 ![PyPI - License](https://img.shields.io/pypi/l/lgnpy)

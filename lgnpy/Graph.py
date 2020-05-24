@@ -36,6 +36,7 @@ class Graph():
         self.mean = np.array(self.get_mean())
         self.cov = np.array(self.get_covariance())
         self.precision_matrix = np.linalg.inv(self.cov)
+        self.hvector = self.precision_matrix.dot(self.mean)
         self.evidences = dict.fromkeys(self.nodes)
 
     def set_parameters(self, mean, cov):  # TODO self.data.mean giving errors

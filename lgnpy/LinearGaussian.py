@@ -20,7 +20,7 @@ class LinearGaussian(Graph):
     """
     index_to_keep = [self.nodes.index(node)]
     index_to_reduce =  [self.nodes.index(idx) for idx in list(self.g.pred[node])]
-    values = self._get_parent_calculated_means(list(self.g.pred[node]))
+    values = self.__get_parent_calculated_means(list(self.g.pred[node]))
 
     mu_j = self.mean[index_to_keep]
     mu_i = self.mean[index_to_reduce]
@@ -87,7 +87,7 @@ class LinearGaussian(Graph):
           _log.debug(f"Evidence wasn't available for node {node}, so took mean.")
         for child in self.g.succ[node]:
           if self.done_flags[child] != True:
-            self.calculated_means[child],self.calculated_vars[child] = self._get_node_values(child)
+            self.calculated_means[child],self.calculated_vars[child] = self.__get_node_values(child)
             _log.debug(f"\tcalculated for {child}")
             self.done_flags[child]=True
             leaf_nodes.append(child)
