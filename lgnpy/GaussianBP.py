@@ -21,8 +21,8 @@ class GaussianBP(Graph):
 
   def _get_conditionals(self):
       """
+      Find out indexes to be conditioned based on evidences
       """
-      # Find out indexes to be conditioned based on evidences
       index_to_keep = [self.nodes.index(idx) for idx,val in self.evidences.items() if val is None ]
       index_to_remove = [self.nodes.index(idx) for idx, val in self.evidences.items() if val is not None]
 
@@ -42,14 +42,23 @@ class GaussianBP(Graph):
     h = np.diag(self.hvectormod)
     p = self.precision_matrixmod
     self.iterations = iterations
+    self.errors=[]
     for n in range(self.iterations):
+      oldh = h.copy()
       for a in range(len(j)):
         for b in range(len(j)):
           if a != b and p[a][b]!= 0:
             j[a][b] = -p[a][b] * p[b][a] * (1/(sum(j[:,a]) - j[b][a]))
             h[a][b] = -p[a][b] * (1/(sum(j[:,a]) - j[b][a])) * (sum(h[:,a]) - h[b][a])
-      if sum(sum(h - oldh)) < eps:
-          print("converged")
+      self.errors.append(sum(sum(h - oldh)))
+      if abs(sum(sum(h - oldh))) == 0:
+          print(f"Converged in {n} iterations.")
+          break
+
+      if abs(sum(sum(h - oldh))) < epsilon:
+          print("Converged in {n} iterations.")
+          break
+
     self.j=j
     self.h=h
 
@@ -64,7 +73,7 @@ class GaussianBP(Graph):
       self.infh.append(sum(self.h[:,n]))
     self.infj = np.array(self.infj)
     self.infh = np.array(self.infh)
-    return 1/self.infj,(1/self.infj)*self.infh
+    return {'mean':(1/self.infj)*self.infh,'var':1/self.infj}
 
 
   def __build_precisions(self):
@@ -74,9 +83,11 @@ class GaussianBP(Graph):
     self.modprecision = np.zeros()
 
 
-  def run_inference(self,iterations,debug=False):
+  def run_inference(self,iterations,epsilon,debug=False):
         self._get_conditionals()
-        self._run_gabp(iterations)
+        self._run_gabp(iterations,epsilon)
+        return self._infer_marginals()
+
 
 
 
