@@ -8,7 +8,7 @@ from .logging_config import Logger
 log = Logger()
 
 
-class Graph():
+class Graph:
     """
     Common methods for graphs, evidences and EDA.
     """
@@ -19,7 +19,7 @@ class Graph():
         """
         self.g = nx.DiGraph()
 
-    def set_data(self,dataframe):
+    def set_data(self, dataframe):
         """
         Set Data using Pandas DataFrame. Parameters are set automatically from DataFrame.
         No need to call set_parameters if data is set using this function.
@@ -29,7 +29,9 @@ class Graph():
         if len(dataframe.columns) <= 1:
             raise ValueError(f"Dataframe contains only {dataframe.columns}")
         if not set(list((self.g.nodes))).issubset(list(dataframe.columns)):
-            raise ValueError(f"DataFrame does not contain {np.setdiff1d(list(self.g.nodes), list(dataframe.columns))}")
+            raise ValueError(
+                f"DataFrame does not contain {np.setdiff1d(list(self.g.nodes), list(dataframe.columns))}"
+            )
         dataframe = dataframe[list(self.g.nodes)]
         self.data = dataframe.reindex(sorted(dataframe.columns), axis=1)
         self.nodes = list((self.data.columns))
@@ -92,18 +94,19 @@ class Graph():
 
     def draw_network(self, filename, open=True):
         """
-        Plot network using matplolib library
+        Plot network using matplotlib library
         """
 
-        nx.drawing.nx_pydot.to_pydot(self.g).write_png(filename + '.png')
-        if open == True:
+        nx.drawing.nx_pydot.to_pydot(self.g).write_png(filename + ".png")
+        if open:
             import matplotlib.pyplot as plt
             import matplotlib.image as mpimg
             import matplotlib as mpl
-            mpl.rcParams['figure.dpi'] = 200
+
+            mpl.rcParams["figure.dpi"] = 200
             plt.figure(figsize=(10, 20))
-            img = mpimg.imread(filename + '.png')
-            imgplot = plt.imshow(img)
+            img = mpimg.imread(filename + ".png")
+            plt.imshow(img)
             plt.show()
 
     def get_parents(self, node):
@@ -139,7 +142,9 @@ class Graph():
             if key not in self.nodes:
                 raise ValueError(f"'{key}'' node is not available in network")
             if not isinstance(val, numbers.Number):
-                raise ValueError(f"Node '{key}'s given evidence is not a number. It's ({(val)})'")
+                raise ValueError(
+                    f"Node '{key}'s given evidence is not a number. It's ({val})'"
+                )
             self.evidences[key] = val
 
     def get_evidences(self):
@@ -162,14 +167,16 @@ class Graph():
         """
         Summary of each nodes in network.+
         """
-        summary_cols = ['Node', 'Mean', 'Std', 'Parents', 'Children']
+        summary_cols = ["Node", "Mean", "Std", "Parents", "Children"]
         summary = pd.DataFrame(columns=summary_cols)
         for node in self.nodes:
-            row = [node,
-                   round(self.data[node].mean(), 4),
-                   round(self.data[node].std(), 4),
-                   self.get_parents(node),
-                   self.get_children(node)]
+            row = [
+                node,
+                round(self.data[node].mean(), 4),
+                round(self.data[node].std(), 4),
+                self.get_parents(node),
+                self.get_children(node),
+            ]
             summary.loc[len(summary)] = row
         return summary
 
@@ -184,36 +191,33 @@ class Graph():
 
         import seaborn as sns
         import matplotlib.pyplot as plt
+
         columns = 5
         sns.set(font_scale=1.0)
         rows = math.ceil(len(self.data.columns) / columns)
-        fig, ax = plt.subplots(ncols=columns,
-                               nrows=rows,
-                               figsize=(12, rows * 2))
+        fig, ax = plt.subplots(ncols=columns, nrows=rows, figsize=(12, rows * 2))
 
         fig.tight_layout()
         for idx, axis in enumerate(ax.flatten()):
-            sns.distplot(self.data.iloc[:, idx].dropna(),
-                         norm_hist=False,
-                         ax=axis,
-                         label="")
+            sns.distplot(
+                self.data.iloc[:, idx].dropna(), norm_hist=False, ax=axis, label=""
+            )
 
             axis.set_title(self.data.columns[idx])
-            axis.set_xlabel('')
+            axis.set_xlabel("")
 
             axis.yaxis.set_major_formatter(plt.NullFormatter())
-            plt.text(0.2,
-                     0.8,
-                     f'u:{round(self.data.iloc[:, idx].mean(), 2)}\nsd={round(self.data.iloc[:, idx].std(), 2)}',
-                     ha='center',
-                     va='center',
-                     transform=axis.transAxes)
+            plt.text(
+                0.2,
+                0.8,
+                f"u:{round(self.data.iloc[:, idx].mean(), 2)}\nsd={round(self.data.iloc[:, idx].std(), 2)}",
+                ha="center",
+                va="center",
+                transform=axis.transAxes,
+            )
             if idx == len(self.data.columns) - 1:
                 break
         plt.subplots_adjust(hspace=0.4, wspace=0.1)
-        if save == True:
-            plt.savefig(filename + '.png')
+        if save:
+            plt.savefig(filename + ".png")
         plt.show()
-
-
-
