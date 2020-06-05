@@ -92,29 +92,29 @@ class LinearGaussian(Graph):
         self.done_flags = dict.fromkeys(self.nodes)
         for node in leaf_nodes:
             self.done_flags[node] = True
-        while not all(x == True for x in self.done_flags.values()):
-            next_leaf_nodes = leaf_nodes
-            leaf_nodes = []
-            for node in next_leaf_nodes:
-                _log.debug(
-                    f"Calculating children of {node} : {list(self.g.succ[node].keys())}"
-                )
-                if self.calculated_means[node] == None:
-                    self.calculated_means[node] = self.mean[self.nodes.index(node)]
+            while not all(x == True for x in self.done_flags.values()):
+                next_leaf_nodes = leaf_nodes
+                leaf_nodes = []
+                for node in next_leaf_nodes:
                     _log.debug(
-                        f"Evidence was not available for node {node}, so took mean."
+                        f"Calculating children of {node} : {list(self.g.succ[node].keys())}"
                     )
-                for child in self.g.succ[node]:
-                    if self.done_flags[child] != True:
-                        (
-                            self.calculated_means[child],
-                            self.calculated_vars[child],
-                        ) = self.__get_node_values(child)
-                        _log.debug(f"\tcalculated for {child}")
-                        self.done_flags[child] = True
-                        leaf_nodes.append(child)
-                    else:
-                        _log.debug(f"\t{child} already calculated")
+                    if self.calculated_means[node] == None:
+                        self.calculated_means[node] = self.mean[self.nodes.index(node)]
+                        _log.debug(
+                            f"Evidence was not available for node {node}, so took mean."
+                        )
+                    for child in self.g.succ[node]:
+                        if self.done_flags[child] != True:
+                            (
+                                self.calculated_means[child],
+                                self.calculated_vars[child],
+                            ) = self.__get_node_values(child)
+                            _log.debug(f"\tcalculated for {child}")
+                            self.done_flags[child] = True
+                            leaf_nodes.append(child)
+                        else:
+                            _log.debug(f"\t{child} already calculated")
 
         self.inf_summary["Mean_inferred"] = self.inf_summary.index.to_series().map(
             self.calculated_means

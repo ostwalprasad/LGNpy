@@ -103,8 +103,8 @@ class Graph:
             import matplotlib.image as mpimg
             import matplotlib as mpl
 
-            mpl.rcParams["figure.dpi"] = 200
-            plt.figure(figsize=(10, 20))
+            mpl.rcParams["figure.dpi"] = 500
+            plt.figure(figsize=(len(self.nodes), len(self.nodes)))
             img = mpimg.imread(filename + ".png")
             plt.imshow(img)
             plt.show()
