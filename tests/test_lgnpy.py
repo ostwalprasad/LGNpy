@@ -108,6 +108,7 @@ def test_learning_and_inference():
     assert lg.get_evidences() == {"A": 7, "B": 2, "C": None, "D": None, "E": None}
 
     m, v = lg.run_inference(debug=False)
+
     np.testing.assert_almost_equal(
         list(m.values()),
         [7, 2, 21.784476453616936, 2.213680241394609, 65.4286632872412],

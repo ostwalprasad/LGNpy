@@ -3,6 +3,7 @@ import numpy as np
 import networkx as nx
 import numbers
 import math
+import copy
 from .Graph import Graph
 import warnings
 from .logging_config import Logger
@@ -57,64 +58,29 @@ class LinearGaussian(Graph):
     """
         return self.parameters
 
-    def run_inference(self, debug=True, return_results=True):
+    def __build_results(self):
         """
-    Run Inference on network with given evidences.
-    """
+        Make Pandas dataframe with the results.
+
+        """
+
         self.inf_summary = pd.DataFrame(
-          index=self.nodes,
-          columns=[
-            "Evidence",
-            "Mean",
-            "Mean_inferred",
-            "Variance",
-            "Variance_inferred",
-          ],
+            index=self.nodes,
+            columns=[
+                "Evidence",
+                "Mean",
+                "Mean_inferred",
+                "Variance",
+                "Variance_inferred",
+            ],
         )
+
         self.inf_summary.loc[:, "Mean"] = self.mean
         self.inf_summary["Evidence"] = self.inf_summary.index.to_series().map(
-          self.evidences
+            self.evidences
         )
         self.inf_summary.loc[:, "Variance"] = np.diag(self.cov)
 
-        _log = log.setup_logger(debug=debug)
-        _log.debug("Started")
-        self.parameters = dict.fromkeys(self.nodes)
-        if all(x == None for x in self.evidences.values()):
-            _log.debug("No evidence was set. Proceeding without evidence")
-        leaf_nodes = [
-            x
-            for x in self.g.nodes()
-            if self.g.out_degree(x) >= 1 and self.g.in_degree(x) == 0
-        ]
-        self.calculated_means = self.evidences
-        self.calculated_vars = dict.fromkeys(self.nodes)
-        self.done_flags = dict.fromkeys(self.nodes)
-        for node in leaf_nodes:
-            self.done_flags[node] = True
-            while not all(x == True for x in self.done_flags.values()):
-                next_leaf_nodes = leaf_nodes
-                leaf_nodes = []
-                for node in next_leaf_nodes:
-                    _log.debug(
-                        f"Calculating children of {node} : {list(self.g.succ[node].keys())}"
-                    )
-                    if self.calculated_means[node] == None:
-                        self.calculated_means[node] = self.mean[self.nodes.index(node)]
-                        _log.debug(
-                            f"Evidence was not available for node {node}, so took mean."
-                        )
-                    for child in self.g.succ[node]:
-                        if self.done_flags[child] != True:
-                            (
-                                self.calculated_means[child],
-                                self.calculated_vars[child],
-                            ) = self.__get_node_values(child)
-                            _log.debug(f"\tcalculated for {child}")
-                            self.done_flags[child] = True
-                            leaf_nodes.append(child)
-                        else:
-                            _log.debug(f"\t{child} already calculated")
 
         self.inf_summary["Mean_inferred"] = self.inf_summary.index.to_series().map(
             self.calculated_means
@@ -125,12 +91,113 @@ class LinearGaussian(Graph):
         self.inf_summary["u_%change"] = (
             (self.inf_summary["Mean_inferred"] - self.inf_summary["Mean"]) / self.inf_summary["Mean"]
         ) * 100
+
         self.inf_summary = (
             self.inf_summary.round(4)
             .replace(pd.np.nan, "", regex=True)
             .replace(0, "", regex=True)
         )
         return self.inf_summary
+
+    def run_inference(self, debug=True, return_results=True):
+        """
+        Run Inference on network with given evidences.
+        """
+
+        _log = log.setup_logger(debug=debug)
+        _log.debug("Started")
+
+        self.parameters = dict.fromkeys(self.nodes)
+        if all(x == None for x in self.evidences.values()):
+            _log.debug("No evidence was set. Proceeding without evidence")
+        root_nodes = [
+            x
+            for x in self.g.nodes()
+            if self.g.out_degree(x) >= 1 and self.g.in_degree(x) == 0
+        ]
+        print("initial root nods")
+        print(root_nodes)
+        self.calculated_means = copy.deepcopy(self.evidences)
+        self.calculated_vars = dict.fromkeys(self.nodes)
+        self.done_flags = dict.fromkeys(self.nodes)
+
+        for node in root_nodes:
+            self.done_flags[node] = True
+
+        while not all(x == True for x in self.done_flags.values()):
+            next_root_nodes = copy.deepcopy(root_nodes)
+            root_nodes = []
+            for node in next_root_nodes:
+                _log.debug( f"Calculating children of {node} : {list(self.g.succ[node].keys())}")
+                if self.calculated_means[node] == None:
+                    self.calculated_means[node] = self.mean[self.nodes.index(node)]
+                    _log.debug(f"Evidence was not available for node {node}, so took mean.")
+                for child in self.g.succ[node]:
+                    if self.done_flags[child] != True:
+                        (
+                            self.calculated_means[child],
+                            self.calculated_vars[child],
+                        ) = self.__get_node_values(child)
+                        _log.debug(f"\tcalculated for {child}")
+                        self.done_flags[child] = True
+                        root_nodes.append(child)
+                    else:
+                        _log.debug(f"\t{child} already calculated")
+
+        return self.__build_results()
+
+    def run_inference2(self, debug=True, return_results=True):
+        """
+        Run Inference 2 on network with given evidences.
+        """
+
+        _log = log.setup_logger(debug=debug)
+        _log.debug("Started")
+
+        self.parameters = dict.fromkeys(self.nodes)
+        if all(x == None for x in self.evidences.values()):
+            _log.debug("No evidence was set. Proceeding without evidence")
+        root_nodes = [
+            x
+            for x in self.g.nodes()
+            if self.g.out_degree(x) >= 1 and self.g.in_degree(x) == 0
+        ]
+        # for node in root_nodes:
+        #     children =  self.get_children(node)
+        #     for paren
+
+
+        print("initial root nods")
+        print(root_nodes)
+        self.calculated_means = copy.deepcopy(self.evidences)
+        self.calculated_vars = dict.fromkeys(self.nodes)
+        self.done_flags = dict.fromkeys(self.nodes)
+
+        for node in root_nodes:
+            self.done_flags[node] = True
+
+        while not all(x == True for x in self.done_flags.values()):
+            next_root_nodes = copy.deepcopy(root_nodes)
+            root_nodes = []
+            for node in next_root_nodes:
+                _log.debug( f"Calculating children of {node} : {list(self.g.succ[node].keys())}")
+                if self.calculated_means[node] == None:
+                    self.calculated_means[node] = self.mean[self.nodes.index(node)]
+                    _log.debug(f"Evidence was not available for node {node}, so took mean.")
+                for child in self.g.succ[node]:
+                    if self.done_flags[child] != True:
+                        (
+                            self.calculated_means[child],
+                            self.calculated_vars[child],
+                        ) = self.__get_node_values(child)
+                        _log.debug(f"\tcalculated for {child}")
+                        self.done_flags[child] = True
+                        root_nodes.append(child)
+                    else:
+                        _log.debug(f"\t{child} already calculated")
+
+        return self.__build_results()
+
 
     def get_inference_results(self):
         return self.inf_summary

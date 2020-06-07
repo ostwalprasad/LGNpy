@@ -121,6 +121,15 @@ class Graph:
         """
         return list(self.g.succ[node])
 
+    def get_siblings(self, node):
+        """
+        Get parents of node
+        """
+        successor = list(self.g.succ[node])
+        print(successor)
+
+        return list(self.g.pred[successor])
+
     def get_nodes(self):
         """
         Get list of nodes in network
@@ -147,6 +156,8 @@ class Graph:
                 )
             self.evidences[key] = val
 
+
+
     def get_evidences(self):
         """
         Get evidences if they are set
@@ -158,6 +169,7 @@ class Graph:
         Clear evidences
         """
         self.evidences = dict.fromkeys(self.nodes)
+
         pass
 
     def get_network_object(self):
