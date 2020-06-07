@@ -77,15 +77,11 @@ class GaussianBP(Graph):
             for a in range(len(j)):
                 for b in range(len(j)):
                     if a != b and p[a][b] != 0:
-                        j[a][b] = (
-                                -p[a][b]
-                                * p[b][a]
-                                * (1 / (sum(j[:, a]) - j[b][a]))
-                        )
+                        j[a][b] = -p[a][b] * p[b][a] * (1 / (sum(j[:, a]) - j[b][a]))
                         h[a][b] = (
-                                -p[a][b]
-                                * (1 / (sum(j[:, a]) - j[b][a]))
-                                * (sum(h[:, a]) - h[b][a])
+                            -p[a][b]
+                            * (1 / (sum(j[:, a]) - j[b][a]))
+                            * (sum(h[:, a]) - h[b][a])
                         )
             self.errors.append(sum(sum(h - old_h)))
             if abs(sum(sum(h - old_h))) == 0 or abs(sum(sum(h - old_h))) < epsilon:
@@ -94,7 +90,8 @@ class GaussianBP(Graph):
                 break
         if not self.broken:
             print(
-                f"Did not converge in given {self.iterations}. You can use plot_errors() method to see convergence plot.")
+                f"Did not converge in given {self.iterations}. You can use plot_errors() method to see convergence plot."
+            )
             return False
         self.j = j
         self.h = h
@@ -116,7 +113,7 @@ class GaussianBP(Graph):
     def plot_errors(self):
         plt.plot(self.errors)
 
-    def __build_results(self,results):
+    def __build_results(self, results):
         """
         Make Pandas dataframe with the results.
 
@@ -147,13 +144,13 @@ class GaussianBP(Graph):
             self.inf_summary.index[self.index_to_keep], "Variance_inferred"
         ] = results["var"]
         self.inf_summary["u_%change"] = (
-                                                (self.inf_summary["Mean_inferred"] - self.inf_summary["Mean"])
-                                                / self.inf_summary["Mean"]
-                                        ) * 100
+            (self.inf_summary["Mean_inferred"] - self.inf_summary["Mean"])
+            / self.inf_summary["Mean"]
+        ) * 100
         self.inf_summary = (
             self.inf_summary.round(4)
-                .replace(pd.np.nan, "", regex=True)
-                .replace(0, "", regex=True)
+            .replace(pd.np.nan, "", regex=True)
+            .replace(0, "", regex=True)
         )
         return self.inf_summary
 

@@ -92,12 +92,12 @@ class Graph:
                 raise ValueError("Self loops not allowed")
             self.g.add_edge(edge[0], edge[1])
 
-    def draw_network(self, filename, open=True):
+    def draw_network(self, filename, graph, open=True):
         """
         Plot network using matplotlib library
         """
 
-        nx.drawing.nx_pydot.to_pydot(self.g).write_png(filename + ".png")
+        nx.drawing.nx_pydot.to_pydot(graph).write_png(filename + ".png")
         if open:
             import matplotlib.pyplot as plt
             import matplotlib.image as mpimg
@@ -125,10 +125,14 @@ class Graph:
         """
         Get parents of node
         """
-        successor = list(self.g.succ[node])
-        print(successor)
+        successors = list(self.g.succ[node])
+        siblings = []
+        for s in successors:
+            siblings.extend(list(self.g.pred[s]))
+        return siblings
 
-        return list(self.g.pred[successor])
+    def remove_nodes(self, nodes):
+        self.g.remove_nodes_from(nodes)
 
     def get_nodes(self):
         """
@@ -155,8 +159,6 @@ class Graph:
                     f"Node '{key}'s given evidence is not a number. It's ({val})'"
                 )
             self.evidences[key] = val
-
-
 
     def get_evidences(self):
         """
