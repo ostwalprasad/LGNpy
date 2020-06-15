@@ -115,9 +115,13 @@ class Graph:
         """
         return list(self.g.pred[node])
 
-    def __has_parents(self,node):
-        pass
+    def has_parents(self,node):
+        parents = self.get_parents(node)
+        return True if len(parents)!=0 else False
 
+    def has_children(self,node):
+        parents = self.get_children(node)
+        return True if len(parents)!=0 else False
 
     def get_children(self, node):
         """
@@ -134,6 +138,9 @@ class Graph:
         for s in successors:
             siblings.extend(list(self.g.pred[s]))
         return siblings
+
+    def get_neighbors(self,node):
+        return list(nx.all_neighbors(self.g,node))
 
     def remove_nodes(self, nodes):
         self.g.remove_nodes_from(nodes)

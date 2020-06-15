@@ -44,6 +44,35 @@ class LinearGaussian2(Graph):
 
         return new_mu[0], covariance[0][0]
 
+    def get_node_values2(self, node):
+        """
+    Get mean and variance of node using Linear Gaussian CPD. Calcluated using finding betas
+    """
+        index_to_keep = [self.nodes.index(node)]
+        index_to_reduce = [self.nodes.index(idx) for idx in self.get_neighbors(node)]
+        values = self.__get_parent_calculated_means(self.get_neighbors(node))
+        val = {n: round(v, 3) for n, v in zip(self.get_neighbors(node), values)}
+
+        mu_j = self.mean[index_to_keep]
+        mu_i = self.mean[index_to_reduce]
+
+        sig_i_j = self.cov[np.ix_(index_to_reduce, index_to_keep)]
+        sig_j_i = self.cov[np.ix_(index_to_keep, index_to_reduce)]
+        sig_i_i_inv = np.linalg.inv(self.cov[np.ix_(index_to_reduce, index_to_reduce)])
+        sig_j_j = self.cov[np.ix_(index_to_keep, index_to_keep)]
+
+        covariance = sig_j_j - np.dot(np.dot(sig_j_i, sig_i_i_inv), sig_i_j)
+        beta_0 = mu_j - np.dot(np.dot(sig_j_i, sig_i_i_inv), mu_i)
+        beta = np.dot(sig_j_i, sig_i_i_inv)
+
+        new_mu = beta_0 + np.dot(beta, values)
+
+        node_values = {n: round(v, 3) for n, v in zip(self.get_neighbors(node), values)}
+        node_beta = list(np.around(np.array(list(beta_0) + list(beta[0])), 2))
+        self.parameters[node] = {"node_values": node_values, "node_betas": node_beta}
+        print(f"{node} -- {self.parameters[node]}")
+        return new_mu[0], covariance[0][0]
+
     def __get_parent_calculated_means(self, nodes):
         """
     Get evidences of parents given node name list
@@ -53,6 +82,8 @@ class LinearGaussian2(Graph):
             ev = self.calculated_means[node]
             if ev is None:
                 ev = self.mean[self.nodes.index(node)]
+            else:
+                print(f"ev found fo {node} ")
             pa_e.append(ev)
         return pa_e
 
@@ -152,26 +183,39 @@ class LinearGaussian2(Graph):
         self.calculated_vars = dict.fromkeys(self.nodes)
         self.done_flags = dict.fromkeys(self.nodes)
 
-        # par = self.get_parents(inf_node)
-        # for p in par:
-        #     pass
-        #
-        # it=0
-        while not nx.is_empty(g_temp):
-            it+=1
-            _log.debug(f"\n{'_'*15}\nStep {it}")
-            # self.draw_network("ssdf", g_temp)
-            pure_children = self.__get_pure_root_nodes(g_temp)
-            for child in pure_children:
-                if self.evidences[child] is None:
-                    self.calculated_means[child], self.calculated_vars[child] = self.__get_node_values(child)
-                    self.__print_message(_log,child)
-                else:
-                    _log.debug(f"Skipped Calculating:'{child}' as evidence is available.")
-                g_temp.remove_nodes_from(list(g_temp.pred[child]))
+        def recurse(current_node):
+            print(f"recursing for {current_node}")
+            for p in self.get_neighbors(current_node):
+                if self.has_parents(p):
+                    recurse(p)
+                    print(f"done recursing. calculated means for {current_node}")
+                    self.calculated_means[p], self.calculated_vars[p] = self.get_node_values2(p)
+                # else:
+                #     print(f"No parents, calculating for {current_node}")
+                #     self.calculated_means[p], self.calculated_vars[p] = self.get_node_values2(p)
 
 
+
+        recurse(inf_node)
         return self.__build_results()
+
+
+        # it=0
+        # while not nx.is_empty(g_temp):
+        #     it+=1
+        #     _log.debug(f"\n{'_'*15}\nStep {it}")
+        #     # self.draw_network("ssdf", g_temp)
+        #     pure_children = self.__get_pure_root_nodes(g_temp)
+        #     for child in pure_children:
+        #         if self.evidences[child] is None:
+        #             self.calculated_means[child], self.calculated_vars[child] = self.__get_node_values(child)
+        #             self.__print_message(_log,child)
+        #         else:
+        #             _log.debug(f"Skipped Calculating:'{child}' as evidence is available.")
+        #         g_temp.remove_nodes_from(list(g_temp.pred[child]))
+        #
+        #
+        # return self.__build_results()
 
     def get_inference_results(self):
         return self.inf_summary
