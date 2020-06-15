@@ -115,6 +115,10 @@ class Graph:
         """
         return list(self.g.pred[node])
 
+    def __has_parents(self,node):
+        pass
+
+
     def get_children(self, node):
         """
         Get children of node
