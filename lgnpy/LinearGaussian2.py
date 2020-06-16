@@ -44,14 +44,19 @@ class LinearGaussian2(Graph):
 
         return new_mu[0], covariance[0][0]
 
-    def get_node_values2(self, node):
+    def get_node_values2(self, node,origin):
         """
     Get mean and variance of node using Linear Gaussian CPD. Calcluated using finding betas
     """
+        neighbors = self.get_neighbors(node)
+        print(origin,node,"origin")
+        print(neighbors, "neighbors")
+        if origin in neighbors: neighbors.remove(origin)
+
         index_to_keep = [self.nodes.index(node)]
-        index_to_reduce = [self.nodes.index(idx) for idx in self.get_neighbors(node)]
-        values = self.__get_parent_calculated_means(self.get_neighbors(node))
-        val = {n: round(v, 3) for n, v in zip(self.get_neighbors(node), values)}
+        index_to_reduce = [self.nodes.index(idx) for idx in neighbors]
+        values = self.__get_parent_calculated_means(neighbors)
+        val = {n: round(v, 3) for n, v in zip(neighbors, values)}
 
         mu_j = self.mean[index_to_keep]
         mu_i = self.mean[index_to_reduce]
@@ -67,7 +72,7 @@ class LinearGaussian2(Graph):
 
         new_mu = beta_0 + np.dot(beta, values)
 
-        node_values = {n: round(v, 3) for n, v in zip(self.get_neighbors(node), values)}
+        node_values = {n: round(v, 3) for n, v in zip(neighbors, values)}
         node_beta = list(np.around(np.array(list(beta_0) + list(beta[0])), 2))
         self.parameters[node] = {"node_values": node_values, "node_betas": node_beta}
         print(f"{node} -- {self.parameters[node]}")
@@ -83,7 +88,8 @@ class LinearGaussian2(Graph):
             if ev is None:
                 ev = self.mean[self.nodes.index(node)]
             else:
-                print(f"ev found fo {node} ")
+                pass
+#                print(f"ev found fo {node} ")
             pa_e.append(ev)
         return pa_e
 
@@ -183,20 +189,25 @@ class LinearGaussian2(Graph):
         self.calculated_vars = dict.fromkeys(self.nodes)
         self.done_flags = dict.fromkeys(self.nodes)
 
-        def recurse(current_node):
-            print(f"recursing for {current_node}")
+        def recurse(current_node,origin):
+            print(f"-re-cursing for {current_node} wiht {origin}")
             for p in self.get_neighbors(current_node):
-                if self.has_parents(p):
-                    recurse(p)
-                    print(f"done recursing. calculated means for {current_node}")
-                    self.calculated_means[p], self.calculated_vars[p] = self.get_node_values2(p)
-                # else:
-                #     print(f"No parents, calculating for {current_node}")
-                #     self.calculated_means[p], self.calculated_vars[p] = self.get_node_values2(p)
+                if len(self.get_neighbors(p)) > 1:
+                    if p != origin:
+        #                print(f"Doing {p}")
+                        recurse(p,current_node)
+          #              print(f"done re-cursing. calculated means for {p} with origin {origin} and current node {current_node}")
+                        self.calculated_means[p], self.calculated_vars[p] = self.get_node_values2(p,current_node)
+                    else:
+                        print(f"--{p} is {origin}. Skipping.")
+                else:
+                    print(f"Whofffff: No parents of {p}")
 
 
 
-        recurse(inf_node)
+
+        recurse(inf_node,inf_node)
+        self.calculated_means[inf_node], self.calculated_vars[inf_node] = self.get_node_values2(inf_node,"")
         return self.__build_results()
 
 

@@ -92,11 +92,13 @@ class Graph:
                 raise ValueError("Self loops not allowed")
             self.g.add_edge(edge[0], edge[1])
 
-    def draw_network(self, filename, graph, open=True):
+    def draw_network(self, filename, graph,annotations=True,open=True):
         """
         Plot network using matplotlib library
         """
 
+        for edge in list(graph.edges):
+            graph.edges[edge[0],edge[1]]['label'] = str(round(self.data[[edge[0],edge[1]]].corr().iloc[0,1],1))
         nx.drawing.nx_pydot.to_pydot(graph).write_png(filename + ".png")
         if open:
             import matplotlib.pyplot as plt
