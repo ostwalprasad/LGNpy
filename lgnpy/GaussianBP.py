@@ -1,16 +1,10 @@
 import pandas as pd
 import numpy as np
-import networkx as nx
-import numbers
-import math
 from .Graph import Graph
 import matplotlib.pyplot as plt
-import seaborn as sns
-import warnings
-import copy
+
 from .logging_config import Logger
 
-log = Logger()
 
 
 class GaussianBP(Graph):
@@ -19,8 +13,11 @@ class GaussianBP(Graph):
   """
 
     def __init__(self):
+        """
+            Inherits base graph methods from Graph
+        """
         super().__init__()
-        pass
+        self.log = Logger()
 
     def __get_indexes(self, node_list):
         """
@@ -112,6 +109,7 @@ class GaussianBP(Graph):
 
     def plot_errors(self):
         plt.plot(self.errors)
+        plt.show()
 
     def __build_results(self, results):
         """

@@ -1,23 +1,28 @@
 import pandas as pd
 import numpy as np
 import networkx as nx
-import numbers
-import math
 import copy
 from .Graph import Graph
-import warnings
 from .logging_config import Logger
 
-log = Logger()
+
 
 
 class LinearGaussian(Graph):
+    """
+    Implemented Linear Gaussian Algorithm
+    """
+
     def __init__(self):
+        """
+        Inherits base graph methods from Graph
+        """
         super().__init__()
+        self.log = Logger()
 
     def __get_node_values(self, node):
         """
-    Get mean and variance of node using Linear Gaussian CPD. Calcluated using finding betas
+    Get mean and variance of node using Linear Gaussian CPD. Calculated by finding betas
     """
         index_to_keep = [self.nodes.index(node)]
         index_to_reduce = [self.nodes.index(idx) for idx in list(self.g.pred[node])]
@@ -138,14 +143,14 @@ class LinearGaussian(Graph):
 
     def run_inference(self, debug=True, return_results=True):
         """
-        Run Inference 2 on network with given evidences.
+        Run Inference on network with given evidences.
         """
         g_temp = copy.deepcopy(self.g)
-        _log = log.setup_logger(debug=debug)
-        _log.debug("Started")
+        self._log = self.log.setup_logger(debug=debug)
+        self._log.debug("Started")
 
         if all(x == None for x in self.evidences.values()):
-            _log.debug("No evidences were set. Proceeding without evidence")
+            self._log.debug("No evidences were set. Proceeding without evidence")
 
         self.parameters = dict.fromkeys(self.nodes)
         self.calculated_means = copy.deepcopy(self.evidences)
@@ -155,19 +160,23 @@ class LinearGaussian(Graph):
         it=0
         while not nx.is_empty(g_temp):
             it+=1
-            _log.debug(f"\n{'_'*15}\nStep {it}")
-            # self.draw_network("ssdf", g_temp)
             pure_children = self.__get_pure_root_nodes(g_temp)
             for child in pure_children:
                 if self.evidences[child] is None:
                     self.calculated_means[child], self.calculated_vars[child] = self.__get_node_values(child)
-                    self.__print_message(_log,child)
+                    self.__print_message(self._log,child)
                 else:
-                    _log.debug(f"Skipped Calculating:'{child}' as evidence is available.")
+                    self._log.debug(f"Skipped Calculating:'{child}' as evidence is available.")
                 g_temp.remove_nodes_from(list(g_temp.pred[child]))
-
 
         return self.__build_results()
 
     def get_inference_results(self):
+        """Get inference result
+
+        Returns
+        -------
+        dataframe: Dataframe with inference results.
+
+        """
         return self.inf_summary

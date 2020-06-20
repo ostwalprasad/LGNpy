@@ -1,8 +1,6 @@
-
 <img src="https://github.com/ostwalprasad/LGNpy/raw/master/docs/images/logo.png" width="250" > 
 
-## Gaussian Bayesian Networks -Representation, Learning and Inference
-
+## Linear Gaussian Bayesian Networks -Representation, Learning and Inference
 
 [![Build Status](https://travis-ci.org/ostwalprasad/LGNpy.svg?branch=master)](https://travis-ci.org/ostwalprasad/LGNpy)
 ![PyPI - License](https://img.shields.io/pypi/l/lgnpy)
@@ -11,12 +9,13 @@
 [![codecov](https://codecov.io/gh/ostwalprasad/LGNpy/branch/master/graph/badge.svg)](https://codecov.io/gh/ostwalprasad/LGNpy) 
 [![Downloads](https://pepy.tech/badge/lgnpy)](https://pepy.tech/project/lgnpy)
 
+A Bayesian Network (BN) is a probabilistic graphical model that represents a set of variables and their conditional dependencies via graph. Gaussian BN is a special case where set of continuous variables are represented by Gaussian Distributions. Gaussians are surprisingly good approximation for many real world continuous distributions. 
 
-LGNs are Bayesian Networks where all the nodes have continuous data. Gaussians are surprisingly good approximation for many real world continuous distributions. This package helps in modelling the network, learning parameters through data and running inference with evidence(s)
+This package helps in modelling the network, learning parameters through data and running inference with evidence(s). Two types of Gaussian BNs are implemented:
 
-#### Models Implemented:
-1. Linear Gaussian Network
-2. Gaussian Belief Propagation (Also called as _Message Passing Algorithm_ or _GaBP Algorithm_)
+1) **Linear Gaussian Network:** A directed BN where CPDs are linear gaussian.
+
+2) **Gaussian Belief Propagation:** An undirected BN where it runs *message passing algorithm* to iteratively solve precision matrix and find out marginals of variables with or without conditionals.
 
 ## Installation
 ```bash
@@ -26,14 +25,15 @@ $ pip install lgnpy
 or clone the repository.
 
 ```bash
-$ pip install https://github.com/ostwalprasad/lgnpy
+$ git clone https://github.com/ostwalprasad/lgnpy
 ```
 
 
 
 ## Getting Started
 
-Here are steps for Linear Gaussian Model. Gaussian Belief Propagation Model is also similar. 
+Here are steps for Linear Gaussian Network. Gaussian Belief Propagation Model is also similar. 
+
 #### 	1. Create Network
 
 <img src="https://raw.githubusercontent.com/ostwalprasad/LGNpy/master/docs/images/network.png" width="200" >
@@ -88,7 +88,7 @@ where, its parameters  are calculated using conditional distribution of parent(s
 lg.run_inference(debug=False)
    ```
 
-   
+   <img src="https://github.com/ostwalprasad/LGNpy/raw/master/docs/images/inference.png" width="800" >
 
 ## Additional Functions:
 
@@ -101,6 +101,7 @@ lg.plot_distributions(save=False)
 lg.network_summary()
 ```
 <br/><img src="https://raw.githubusercontent.com/ostwalprasad/LGNpy/master/docs/images/summary.png"  width="300" > <br/>
+
 ```python
 lg.draw_network(filename='sample_network',open=True)
 ```
@@ -108,9 +109,11 @@ lg.draw_network(filename='sample_network',open=True)
 
 ## Examples
 
-Notebook: [Linear Gaussian Networks](https://github.com/ostwalprasad/LGNpy/blob/master/examples/lgnpy_example.ipynb)
+Notebook: [Linear Gaussian Networks](https://github.com/ostwalprasad/LGNpy/blob/master/examples/lgnpy_examples.ipynb)
 
-Notebook: [Gaussian Belief Propagation]() 
+## Known Issues
+
+GaussianBP algorithm does not converge for some specific precision matrices (inverse covariances). Solution is to use [Graphcial Lasso](https://scikit-learn.org/stable/modules/generated/sklearn.covariance.GraphicalLasso.html) or similar estimator methods to find precision matrix. Pull requests are welcome.
 
 ## References:
 
@@ -120,7 +123,7 @@ Notebook: [Gaussian Belief Propagation]()
 
 2. [Gaussian Bayesian Networks](https://cedar.buffalo.edu/~srihari/CSE674/Chap7/7.2-GaussBNs.pdf), Sargur Srihari
 
-#####  Gaussian Belief Propogation 
+#####  Gaussian Belief Propagation 
 
 1. [Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 14.2.3
 2. [Gaussian Belief Propagation: Theory and Aplication](https://arxiv.org/abs/0811.2518), Danny Bickson
