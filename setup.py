@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="LGNpy",
-    version="0.0.5",
+    version="1.0.0",
     author="Prasad Ostwal",
     author_email="prasadostwal@gmail.com",
     description="Linear Gaussian Networks - Inference, Parameter Learning and Representation",
@@ -23,7 +23,7 @@ setuptools.setup(
         "Development Status :: 5 - Production/Stable",
     ],
     keywords=" ".join(
-        ["linear", "gaussian", "networks", "representation", "inference"]
+        ["linear", "gaussian", "networks", "representation", "inference","bayesian"]
     ),
     install_requires=["numpy", "pandas", "networkx>=2.3", "pydot"],
     python_requires=">=3.6",

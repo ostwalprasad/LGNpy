@@ -8,6 +8,7 @@
 [![Documentation Status](https://readthedocs.org/projects/lgnpy/badge/?version=latest)](https://lgnpy.readthedocs.io/en/latest/?badge=latest) 
 [![codecov](https://codecov.io/gh/ostwalprasad/LGNpy/branch/master/graph/badge.svg)](https://codecov.io/gh/ostwalprasad/LGNpy) 
 [![Downloads](https://pepy.tech/badge/lgnpy)](https://pepy.tech/project/lgnpy)
+[![DOI](https://zenodo.org/badge/261100544.svg)](https://zenodo.org/badge/latestdoi/261100544)
 
 A Bayesian Network (BN) is a probabilistic graphical model that represents a set of variables and their conditional dependencies via graph. Gaussian BN is a special case where set of continuous variables are represented by Gaussian Distributions. Gaussians are surprisingly good approximation for many real world continuous distributions. 
 
@@ -127,6 +128,26 @@ GaussianBP algorithm does not converge for some specific precision matrices (inv
 
 1. [Probabilistic Graphical Models - Principles and Techniques ](https://mitpress.mit.edu/books/probabilistic-graphical-models), Daphne Koller, Chapter 14.2.3
 2. [Gaussian Belief Propagation: Theory and Aplication](https://arxiv.org/abs/0811.2518), Danny Bickson
+
+## Citation
+
+If you use lgnpy or reference our blog post in a presentation or publication, we would appreciate citations of our package.
+
+> P. Ostwal, “ostwalprasad/LGNpy: v1.0.0.” Zenodo, 20-Jun-2020, doi: 10.5281/ZENODO.3902122.
+
+Here is the corresponding BibText entry
+
+```
+@misc{https://doi.org/10.5281/zenodo.3902122,
+  doi = {10.5281/ZENODO.3902122},
+  url = {https://zenodo.org/record/3902122},
+  author = {Ostwal,  Prasad},
+  title = {ostwalprasad/LGNpy: v1.0.0},
+  publisher = {Zenodo},
+  year = {2020}
+}
+```
+
 ## License
 
 MIT License Copyright (c) 2020, Prasad Ostwal
