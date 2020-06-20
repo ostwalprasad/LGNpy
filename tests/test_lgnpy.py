@@ -263,7 +263,6 @@ def test_utility_functions():
     lg4.network_summary()
     #assert lg4.draw_network('Hello',open=False) == None
     #assert lg4.plot_distributions() == None
-    plt.close('all')
     pass
 
 
