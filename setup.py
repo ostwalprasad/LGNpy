@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="LGNpy", 
+    name="LGNpy",
     version="0.0.5",
     author="Prasad Ostwal",
     author_email="prasadostwal@gmail.com",
@@ -14,16 +14,17 @@ setuptools.setup(
     url="https://github.com/ostwalprasad/lgnpy",
     packages=setuptools.find_packages(),
     classifiers=[
-        'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Topic :: Scientific/Engineering :: Artificial Intelligence',
-        'Intended Audience :: Developers',
-        'Intended Audience :: Science/Research',
-        'Development Status :: 5 - Production/Stable'
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Development Status :: 5 - Production/Stable",
     ],
-    keywords=' '.join(['linear', 'gaussian', 'networks','representation','inference']),
-    install_requires=['numpy','pandas','networkx>=2.3','pydot'],
-    python_requires='>=3.6',
+    keywords=" ".join(
+        ["linear", "gaussian", "networks", "representation", "inference"]
+    ),
+    install_requires=["numpy", "pandas", "networkx>=2.3", "pydot"],
+    python_requires=">=3.6",
 )
-

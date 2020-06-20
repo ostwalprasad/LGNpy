@@ -1,5 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+/venv
+/testnotebooks
 *.py[cod]
 *$py.class
 
@@ -53,3 +55,6 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+LogoDesign.pptx
+Logo.png
+.ipynb_checkpoints

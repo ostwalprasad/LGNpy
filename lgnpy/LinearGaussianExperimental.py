@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import networkx as nx
 import copy
 from .Graph import Graph
 from .logging_config import Logger
@@ -8,26 +7,26 @@ from .logging_config import Logger
 
 
 
-class LinearGaussian(Graph):
-    """
-    Implemented Linear Gaussian Algorithm
+class LinearGaussianExperimental(Graph):
     """
 
+    Implements modified Linear Gaussian. Results not guaranteed. Experimental.
+    """
     def __init__(self):
-        """
-        Inherits base graph methods from Graph
-        """
         super().__init__()
         self.log = Logger()
 
-    def __get_node_values(self, node):
+    def get_node_values(self, node,origin):
         """
-    Get mean and variance of node using Linear Gaussian CPD. Calculated by finding betas
+    Get mean and variance of node using Linear Gaussian CPD. Calcluated using finding betas
     """
+        neighbors = self.get_neighbors(node)
+        if origin in neighbors: neighbors.remove(origin)
+
         index_to_keep = [self.nodes.index(node)]
-        index_to_reduce = [self.nodes.index(idx) for idx in list(self.g.pred[node])]
-        values = self.__get_parent_calculated_means(list(self.g.pred[node]))
-        val = {n: round(v, 3) for n, v in zip(list(self.g.pred[node]), values)}
+        index_to_reduce = [self.nodes.index(idx) for idx in neighbors]
+        values = self.__get_parent_calculated_means(neighbors)
+        val = {n: round(v, 3) for n, v in zip(neighbors, values)}
 
         mu_j = self.mean[index_to_keep]
         mu_i = self.mean[index_to_reduce]
@@ -43,10 +42,9 @@ class LinearGaussian(Graph):
 
         new_mu = beta_0 + np.dot(beta, values)
 
-        node_values = {n: round(v, 3) for n, v in zip(list(self.g.pred[node]), values)}
+        node_values = {n: round(v, 3) for n, v in zip(neighbors, values)}
         node_beta = list(np.around(np.array(list(beta_0) + list(beta[0])), 2))
         self.parameters[node] = {"node_values": node_values, "node_betas": node_beta}
-
         return new_mu[0], covariance[0][0]
 
     def __get_parent_calculated_means(self, nodes):
@@ -58,6 +56,8 @@ class LinearGaussian(Graph):
             ev = self.calculated_means[node]
             if ev is None:
                 ev = self.mean[self.nodes.index(node)]
+            else:
+                pass
             pa_e.append(ev)
         return pa_e
 
@@ -109,42 +109,16 @@ class LinearGaussian(Graph):
 
         return self.inf_summary
 
-    def __get_pure_root_nodes(self, graph):
-        root_nodes = [
-            x
-            for x in graph.nodes()
-            if graph.out_degree(x) >= 1 and graph.in_degree(x) == 0
-        ]
-
-        children_of_root_nodes = []
-        for node in root_nodes:
-            children_of_root_nodes.extend(list(graph.succ[node]))
-
-        pure_children = []
-        for node in children_of_root_nodes:
-            node_parents = list(graph.pred[node])
-            flag = False
-            for parent in node_parents:
-                if graph.in_degree(parent) != 0:
-                    flag = True
-            if not flag:
-                pure_children.append(node)
-        return list(set(pure_children))
-
-    def __remove_pred_edges(self, node, graph):
-        preds = graph.pred[node]
-        for parent in list(preds):
-            graph.remove_edge(parent, node)
-
     def __print_message(self,log_instance,node):
         log_instance.debug(f"Calculated:'{node}'= {round(self.calculated_means[node], 3)}")
         log_instance.debug(f"Parent nodes used: {self.parameters[node]['node_values']}")
         log_instance.debug(f"Beta calculated: {self.parameters[node]['node_betas']}")
 
-    def run_inference(self, debug=True, return_results=True):
+    def run_inference(self,inf_node,debug=True, return_results=True):
         """
         Run Inference on network with given evidences.
         """
+
         g_temp = copy.deepcopy(self.g)
         self._log = self.log.setup_logger(debug=debug)
         self._log.debug("Started")
@@ -157,26 +131,19 @@ class LinearGaussian(Graph):
         self.calculated_vars = dict.fromkeys(self.nodes)
         self.done_flags = dict.fromkeys(self.nodes)
 
-        it=0
-        while not nx.is_empty(g_temp):
-            it+=1
-            pure_children = self.__get_pure_root_nodes(g_temp)
-            for child in pure_children:
-                if self.evidences[child] is None:
-                    self.calculated_means[child], self.calculated_vars[child] = self.__get_node_values(child)
-                    self.__print_message(self._log,child)
-                else:
-                    self._log.debug(f"Skipped Calculating:'{child}' as evidence is available.")
-                g_temp.remove_nodes_from(list(g_temp.pred[child]))
+        def recurse(current_node,origin):
+            self._log.debug(f"Recursing for {current_node} with {origin}")
+            for p in self.get_neighbors(current_node):
+                if len(self.get_neighbors(p)) > 1:
+                    if p != origin:
+                        recurse(p,current_node)
+                        self.calculated_means[p], self.calculated_vars[p] = self.get_node_values(p,current_node)
+                        self.__print_message(self._log,p)
 
+        recurse(inf_node,inf_node)
+        self.calculated_means[inf_node], self.calculated_vars[inf_node] = self.get_node_values(inf_node,"")
+        self.__print_message(self._log,inf_node)
         return self.__build_results()
 
     def get_inference_results(self):
-        """Get inference result
-
-        Returns
-        -------
-        dataframe: Dataframe with inference results.
-
-        """
         return self.inf_summary
