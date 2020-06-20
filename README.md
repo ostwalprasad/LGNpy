@@ -88,7 +88,7 @@ where, its parameters  are calculated using conditional distribution of parent(s
 lg.run_inference(debug=False)
    ```
 
-   <img src="https://github.com/ostwalprasad/LGNpy/raw/master/docs/images/inference.png" width="800" >
+   <img src="https://github.com/ostwalprasad/LGNpy/raw/master/docs/images/inference.png" width="500" >
 
 ## Additional Functions:
 
@@ -100,7 +100,7 @@ lg.plot_distributions(save=False)
 ```python
 lg.network_summary()
 ```
-<br/><img src="https://raw.githubusercontent.com/ostwalprasad/LGNpy/master/docs/images/summary.png"  width="300" > <br/>
+<img src="https://raw.githubusercontent.com/ostwalprasad/LGNpy/master/docs/images/summary.png"  width="300" > <br/>
 
 ```python
 lg.draw_network(filename='sample_network',open=True)
