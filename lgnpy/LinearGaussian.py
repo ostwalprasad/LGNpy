@@ -103,7 +103,7 @@ class LinearGaussian(Graph):
 
         self.inf_summary = (
             self.inf_summary.round(4)
-            .replace(pd.np.nan, "", regex=True)
+            .replace(np.nan, "", regex=True)
             .replace(0, "", regex=True)
         )
 
