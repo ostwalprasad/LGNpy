@@ -315,6 +315,12 @@ class Graph:
 
         """
         return self.g
+    
+    def network_to_pandas(self):
+        """
+        Returns network in pandas format
+        """
+        return nx.to_pandas_dataframe(self.g)
 
     def network_summary(self):
         """
