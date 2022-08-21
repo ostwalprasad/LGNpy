@@ -1,27 +1,26 @@
 import pandas as pd
 import numpy as np
+from numpy.linalg import LinAlgError
 from .Graph import Graph
 import matplotlib.pyplot as plt
 
 from .logging_config import Logger
 
 
-
 class GaussianBP(Graph):
     """
-  Gaussian Belief Propagation (Message Passing algorithm) for Gaussian Graphical Models
-  """
+    Gaussian Belief Propagation (Message Passing algorithm) for Gaussian Graphical Models
+    """
 
     def __init__(self):
         """
-            Inherits base graph methods from Graph
+        Inherits base graph methods from Graph
         """
         super().__init__()
         self.log = Logger()
 
     def __get_indexes(self, node_list):
         """
-
         Get indexes given node names in list.
         """
         indexes = []
@@ -31,10 +30,11 @@ class GaussianBP(Graph):
 
     def __get_conditionals(self):
         """
-      Find out indexes to be conditioned based on evidences
-      """
+        Find out indexes to be conditioned based on evidences
+        """
         self.index_to_keep = [
-            self.nodes.index(idx) for idx, val in self.evidences.items() if val is None
+            self.nodes.index(idx) for idx, val in self.evidences.items() if
+            val is None
         ]
         self.index_to_remove = [
             self.nodes.index(idx)
@@ -49,19 +49,19 @@ class GaussianBP(Graph):
         prec_j_i = self.precision_matrix[
             np.ix_(self.index_to_keep, self.index_to_remove)
         ]
-        self.hvectormod = self.hvector[self.index_to_keep] - prec_j_i.dot(evidence_list)
+        self.hvectormod = self.hvector[self.index_to_keep] - prec_j_i.dot(
+            evidence_list)
         self.precision_matrixmod = self.precision_matrix[
             np.ix_(self.index_to_keep, self.index_to_keep)
         ]
 
     def __run_gabp(self, iterations, epsilon):
-
         """
-    Run Message passing algorithm
-    """
+        Run Message passing algorithm
+        """
         try:
             np.linalg.cholesky(self.precision_matrixmod)
-        except:
+        except LinAlgError:
             raise ValueError("Precision Matrix is not positive definite.")
         self.broken = False
         j = np.diag(np.diag(self.precision_matrixmod))
@@ -74,14 +74,16 @@ class GaussianBP(Graph):
             for a in range(len(j)):
                 for b in range(len(j)):
                     if a != b and p[a][b] != 0:
-                        j[a][b] = -p[a][b] * p[b][a] * (1 / (sum(j[:, a]) - j[b][a]))
+                        j[a][b] = -p[a][b] * p[b][a] * (
+                                    1 / (sum(j[:, a]) - j[b][a]))
                         h[a][b] = (
-                            -p[a][b]
-                            * (1 / (sum(j[:, a]) - j[b][a]))
-                            * (sum(h[:, a]) - h[b][a])
+                                -p[a][b]
+                                * (1 / (sum(j[:, a]) - j[b][a]))
+                                * (sum(h[:, a]) - h[b][a])
                         )
             self.errors.append(sum(sum(h - old_h)))
-            if abs(sum(sum(h - old_h))) == 0 or abs(sum(sum(h - old_h))) < epsilon:
+            if abs(sum(sum(h - old_h))) == 0 or abs(
+                    sum(sum(h - old_h))) < epsilon:
                 print(f"Converged in {n} iterations.")
                 self.broken = True
                 break
@@ -142,9 +144,11 @@ class GaussianBP(Graph):
             self.inf_summary.index[self.index_to_keep], "Variance_inferred"
         ] = results["var"]
         self.inf_summary["u_%change"] = (
-            (self.inf_summary["Mean_inferred"] - self.inf_summary["Mean"])
-            / self.inf_summary["Mean"]
-        ) * 100
+                                                (self.inf_summary[
+                                                     "Mean_inferred"] -
+                                                 self.inf_summary["Mean"])
+                                                / self.inf_summary["Mean"]
+                                        ) * 100
         self.inf_summary = (
             self.inf_summary.round(4)
             .replace(pd.np.nan, "", regex=True)

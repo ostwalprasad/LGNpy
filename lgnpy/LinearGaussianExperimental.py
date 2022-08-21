@@ -5,23 +5,22 @@ from .Graph import Graph
 from .logging_config import Logger
 
 
-
-
 class LinearGaussianExperimental(Graph):
     """
-
     Implements modified Linear Gaussian. Results not guaranteed. Experimental.
     """
     def __init__(self):
         super().__init__()
         self.log = Logger()
 
-    def get_node_values(self, node,origin):
+    def get_node_values(self, node, origin):
         """
-    Get mean and variance of node using Linear Gaussian CPD. Calcluated using finding betas
-    """
+        Get mean and variance of node using Linear Gaussian CPD.
+        Calcluated using finding betas
+        """
         neighbors = self.get_neighbors(node)
-        if origin in neighbors: neighbors.remove(origin)
+        if origin in neighbors:
+            neighbors.remove(origin)
 
         index_to_keep = [self.nodes.index(node)]
         index_to_reduce = [self.nodes.index(idx) for idx in neighbors]
@@ -49,8 +48,8 @@ class LinearGaussianExperimental(Graph):
 
     def __get_parent_calculated_means(self, nodes):
         """
-    Get evidences of parents given node name list
-    """
+        Get evidences of parents given node name list
+        """
         pa_e = []
         for node in nodes:
             ev = self.calculated_means[node]
@@ -63,14 +62,13 @@ class LinearGaussianExperimental(Graph):
 
     def get_model_parameters(self):
         """
-    Get parameters for each node
-    """
+        Get parameters for each node
+        """
         return self.parameters
 
     def __build_results(self):
         """
         Make Pandas dataframe with the results.
-
         """
 
         self.inf_summary = pd.DataFrame(
@@ -88,7 +86,7 @@ class LinearGaussianExperimental(Graph):
         self.inf_summary["Evidence"] = self.inf_summary.index.to_series().map(
             self.evidences
         )
-        self.inf_summary.loc[:, "Variance"] = list(np.around(np.diag(self.cov),3))
+        self.inf_summary.loc[:, "Variance"] = list(np.around(np.diag(self.cov), 3))
 
         self.inf_summary["Mean_inferred"] = self.inf_summary.index.to_series().map(
             self.calculated_means
@@ -109,12 +107,12 @@ class LinearGaussianExperimental(Graph):
 
         return self.inf_summary
 
-    def __print_message(self,log_instance,node):
+    def __print_message(self, log_instance, node):
         log_instance.debug(f"Calculated:'{node}'= {round(self.calculated_means[node], 3)}")
         log_instance.debug(f"Parent nodes used: {self.parameters[node]['node_values']}")
         log_instance.debug(f"Beta calculated: {self.parameters[node]['node_betas']}")
 
-    def run_inference(self,inf_node,debug=True, return_results=True):
+    def run_inference(self, inf_node, debug=True, return_results=True):
         """
         Run Inference on network with given evidences.
         """
@@ -123,7 +121,7 @@ class LinearGaussianExperimental(Graph):
         self._log = self.log.setup_logger(debug=debug)
         self._log.debug("Started")
 
-        if all(x == None for x in self.evidences.values()):
+        if all(x is None for x in self.evidences.values()):
             self._log.debug("No evidences were set. Proceeding without evidence")
 
         self.parameters = dict.fromkeys(self.nodes)
@@ -131,18 +129,18 @@ class LinearGaussianExperimental(Graph):
         self.calculated_vars = dict.fromkeys(self.nodes)
         self.done_flags = dict.fromkeys(self.nodes)
 
-        def recurse(current_node,origin):
+        def recurse(current_node, origin):
             self._log.debug(f"Recursing for {current_node} with {origin}")
             for p in self.get_neighbors(current_node):
                 if len(self.get_neighbors(p)) > 1:
                     if p != origin:
-                        recurse(p,current_node)
-                        self.calculated_means[p], self.calculated_vars[p] = self.get_node_values(p,current_node)
-                        self.__print_message(self._log,p)
+                        recurse(p, current_node)
+                        self.calculated_means[p], self.calculated_vars[p] = self.get_node_values(p, current_node)
+                        self.__print_message(self._log, p)
 
-        recurse(inf_node,inf_node)
-        self.calculated_means[inf_node], self.calculated_vars[inf_node] = self.get_node_values(inf_node,"")
-        self.__print_message(self._log,inf_node)
+        recurse(inf_node, inf_node)
+        self.calculated_means[inf_node], self.calculated_vars[inf_node] = self.get_node_values(inf_node, "")
+        self.__print_message(self._log, inf_node)
         return self.__build_results()
 
     def get_inference_results(self):
