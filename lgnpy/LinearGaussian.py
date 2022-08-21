@@ -6,8 +6,6 @@ from .Graph import Graph
 from .logging_config import Logger
 
 
-
-
 class LinearGaussian(Graph):
     """
     Implemented Linear Gaussian Algorithm
@@ -22,10 +20,12 @@ class LinearGaussian(Graph):
 
     def __get_node_values(self, node):
         """
-    Get mean and variance of node using Linear Gaussian CPD. Calculated by finding betas
-    """
+        Get mean and variance of node using Linear Gaussian CPD.
+        Calculated by finding betas
+        """
         index_to_keep = [self.nodes.index(node)]
-        index_to_reduce = [self.nodes.index(idx) for idx in list(self.g.pred[node])]
+        index_to_reduce = [self.nodes.index(idx)
+                           for idx in list(self.g.pred[node])]
         values = self.__get_parent_calculated_means(list(self.g.pred[node]))
         val = {n: round(v, 3) for n, v in zip(list(self.g.pred[node]), values)}
 
@@ -34,7 +34,8 @@ class LinearGaussian(Graph):
 
         sig_i_j = self.cov[np.ix_(index_to_reduce, index_to_keep)]
         sig_j_i = self.cov[np.ix_(index_to_keep, index_to_reduce)]
-        sig_i_i_inv = np.linalg.inv(self.cov[np.ix_(index_to_reduce, index_to_reduce)])
+        sig_i_i_inv = np.linalg.inv(self.cov[np.ix_(index_to_reduce,
+                                                    index_to_reduce)])
         sig_j_j = self.cov[np.ix_(index_to_keep, index_to_keep)]
 
         covariance = sig_j_j - np.dot(np.dot(sig_j_i, sig_i_i_inv), sig_i_j)
@@ -43,16 +44,18 @@ class LinearGaussian(Graph):
 
         new_mu = beta_0 + np.dot(beta, values)
 
-        node_values = {n: round(v, 3) for n, v in zip(list(self.g.pred[node]), values)}
+        node_values = {n: round(v, 3) for n, v in zip(list(self.g.pred[node]),
+                                                      values)}
         node_beta = list(np.around(np.array(list(beta_0) + list(beta[0])), 2))
-        self.parameters[node] = {"node_values": node_values, "node_betas": node_beta}
+        self.parameters[node] = {"node_values": node_values,
+                                 "node_betas": node_beta}
 
         return new_mu[0], covariance[0][0]
 
     def __get_parent_calculated_means(self, nodes):
         """
-    Get evidences of parents given node name list
-    """
+        Get evidences of parents given node name list
+        """
         pa_e = []
         for node in nodes:
             ev = self.calculated_means[node]
@@ -63,14 +66,13 @@ class LinearGaussian(Graph):
 
     def get_model_parameters(self):
         """
-    Get parameters for each node
-    """
+        Get parameters for each node
+        """
         return self.parameters
 
     def __build_results(self):
         """
         Make Pandas dataframe with the results.
-
         """
 
         self.inf_summary = pd.DataFrame(
@@ -88,7 +90,7 @@ class LinearGaussian(Graph):
         self.inf_summary["Evidence"] = self.inf_summary.index.to_series().map(
             self.evidences
         )
-        self.inf_summary.loc[:, "Variance"] = list(np.around(np.diag(self.cov),3))
+        self.inf_summary.loc[:, "Variance"] = list(np.around(np.diag(self.cov), 3))
 
         self.inf_summary["Mean_inferred"] = self.inf_summary.index.to_series().map(
             self.calculated_means
@@ -136,7 +138,7 @@ class LinearGaussian(Graph):
         for parent in list(preds):
             graph.remove_edge(parent, node)
 
-    def __print_message(self,log_instance,node):
+    def __print_message(self, log_instance, node):
         log_instance.debug(f"Calculated:'{node}'= {round(self.calculated_means[node], 3)}")
         log_instance.debug(f"Parent nodes used: {self.parameters[node]['node_values']}")
         log_instance.debug(f"Beta calculated: {self.parameters[node]['node_betas']}")
@@ -149,7 +151,7 @@ class LinearGaussian(Graph):
         self._log = self.log.setup_logger(debug=debug)
         self._log.debug("Started")
 
-        if all(x == None for x in self.evidences.values()):
+        if all(x is None for x in self.evidences.values()):
             self._log.debug("No evidences were set. Proceeding without evidence")
 
         self.parameters = dict.fromkeys(self.nodes)
@@ -157,26 +159,27 @@ class LinearGaussian(Graph):
         self.calculated_vars = dict.fromkeys(self.nodes)
         self.done_flags = dict.fromkeys(self.nodes)
 
-        it=0
+        it = 0
         while not nx.is_empty(g_temp):
-            it+=1
+            it += 1
             pure_children = self.__get_pure_root_nodes(g_temp)
             for child in pure_children:
                 if self.evidences[child] is None:
                     self.calculated_means[child], self.calculated_vars[child] = self.__get_node_values(child)
-                    self.__print_message(self._log,child)
+                    self.__print_message(self._log, child)
                 else:
-                    self._log.debug(f"Skipped Calculating:'{child}' as evidence is available.")
+                    self._log.debug(f"Skipped Calculating:'"
+                                    f"{child}' as evidence is available.")
                 g_temp.remove_nodes_from(list(g_temp.pred[child]))
 
         return self.__build_results()
 
     def get_inference_results(self):
-        """Get inference result
+        """
+        Get inference result
 
         Returns
         -------
-        dataframe: Dataframe with inference results.
-
+            dataframe: Dataframe with inference results.
         """
         return self.inf_summary

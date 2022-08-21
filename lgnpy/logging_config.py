@@ -22,7 +22,8 @@ class Logger:
         self.logger = None
         self.log_formatter = None
         self.log_handler = logging.StreamHandler()
-        self.log_format = logging.Formatter("%(message)s", datefmt="%d-%b-%y,%H:%M:%S")
+        self.log_format = logging.Formatter("%(message)s",
+                                            datefmt="%d-%b-%y,%H:%M:%S")
 
     def setup_logger(self, debug=False):
         self.debug = debug

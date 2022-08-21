@@ -186,7 +186,7 @@ class Graph:
             siblings.extend(list(self.g.pred[s]))
         return list(set(siblings))
 
-    def get_neighbors(self,node):
+    def get_neighbors(self, node):
         """Get neighbors of node
 
         Parameters
@@ -198,7 +198,7 @@ class Graph:
         list of neighbors if any
 
         """
-        return list(nx.all_neighbors(self.g,node))
+        return list(nx.all_neighbors(self.g, node))
 
     def get_nodes(self):
         """ Get list of nodes in network
@@ -221,7 +221,7 @@ class Graph:
 
         return list(self.g.edges)
 
-    def has_parents(self,node):
+    def has_parents(self, node):
         """Check if node has parents.
 
         Parameters
@@ -234,22 +234,22 @@ class Graph:
 
         """
         parents = self.get_parents(node)
-        return True if len(parents)!=0 else False
+        return True if len(parents) != 0 else False
 
-    def has_children(self,node):
+    def has_children(self, node):
         """Check if node has children.
 
-               Parameters
-               ----------
-               node: Check if this node has children
+        Parameters
+        ----------
+        node: Check if this node has children
 
-               Returns
-               -------
-               bool: True if has children, False otherwise
+        Returns
+        -------
+        bool: True if has children, False otherwise
+        """
 
-               """
         parents = self.get_children(node)
-        return True if len(parents)!=0 else False
+        return True if len(parents) != 0 else False
 
     def remove_nodes(self, nodes):
         """Remove selected nodes from network
@@ -264,7 +264,6 @@ class Graph:
 
         """
         self.g.remove_nodes_from(nodes)
-
 
     def set_evidences(self, evidence_dict):
         """Set evidence using dictionary key,value pairs
@@ -315,7 +314,7 @@ class Graph:
 
         """
         return self.g
-    
+
     def network_to_pandas(self):
         """
         Returns network in pandas format
@@ -344,7 +343,8 @@ class Graph:
             summary.loc[len(summary)] = row
         return summary
 
-    def draw_network(self, filename, graph=None,correlation_annotation=True,open=True):
+    def draw_network(self, filename, graph=None,
+                     correlation_annotation=True, open=True):
         """Draw Network using Graphviz and PyDot.
 
         This method used Graphviz library to draw graphs, so Graphviz needs to be installed.
@@ -366,11 +366,11 @@ class Graph:
         """
 
         if graph is None:
-            graph=self.g
+            graph = self.g
 
         for edge in list(graph.edges):
             if correlation_annotation:
-                graph.edges[edge[0],edge[1]]['label'] = str(round(self.data[[edge[0],edge[1]]].corr().iloc[0,1],1))
+                graph.edges[edge[0], edge[1]]['label'] = str(round(self.data[[edge[0], edge[1]]].corr().iloc[0, 1], 1))
             graph.edges[edge[0], edge[1]]['fontname'] = 'Arial'
             graph.edges[edge[0], edge[1]]['fontsize'] = 10
 
@@ -415,7 +415,10 @@ class Graph:
         fig.tight_layout()
         for idx, axis in enumerate(ax.flatten()):
             sns.distplot(
-                self.data.iloc[:, idx].dropna(), norm_hist=False, ax=axis, label=""
+                self.data.iloc[:, idx].dropna(),
+                norm_hist=False,
+                ax=axis,
+                label=""
             )
 
             axis.set_title(self.data.columns[idx])

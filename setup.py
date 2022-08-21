@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="LGNpy",
-    version="1.0.0",
+    version="1.0.1",
     author="Prasad Ostwal",
     author_email="prasadostwal@gmail.com",
     description="Linear Gaussian Networks - Inference, Parameter Learning and Representation",
